@@ -67,7 +67,8 @@ const featureIcons = {
   'Отдельный вход': 'window', 'Центр города': 'pin', 'Витринные окна': 'window',
   'Готово к работе': 'shield', 'Под ремонт': 'pencil', 'ИЖС': 'layout',
   'Подъезд круглый год': 'shield', 'Электричество рядом': 'percent',
-  'Тихий район': 'pin', 'Собственность': 'shield'
+  'Тихий район': 'pin', 'Собственность': 'shield', 'С мебелью': 'armchair',
+  'Автономное отопление': 'shield'
 };
 
 const listings = [
@@ -87,6 +88,21 @@ const listings = [
     facts: [['ruler', '10 соток', 'Площадь'], ['building', 'ИЖС', 'Назначение'], ['layers', 'Ровный', 'Рельеф'], ['calendar', 'Свободен', 'Статус'], ['pencil', 'Подъезд круглый год', 'Доступ'], ['percent', 'Собственность', 'Финансирование']],
     features: ['ИЖС', 'Подъезд круглый год', 'Электричество рядом', 'Тихий район', 'Собственность'] }
 ];
+
+const listingDetails = {
+  1: { deal: 'sale', rooms: 2, description: 'Светлая 2-комнатная квартира с современным ремонтом в новом доме. Просторная кухня-гостиная, отдельная спальня и гардеробная. Окна выходят в тихий двор; рядом магазины, школа и остановка.', photos: images.apartment },
+  2: { deal: 'sale', rooms: 4, description: 'Кирпичный дом для семьи в спокойной части Снежного. На участке расположены гараж и хозяйственные постройки, подключены газ, вода и электричество. Дом готов к проживанию.', photos: [images.house, images.home, images.apartment[1], images.apartment[3]] },
+  3: { deal: 'sale', rooms: 0, description: 'Коммерческое помещение на первом этаже с отдельным входом и витринными окнами. Подойдёт для магазина, офиса услуг или небольшого салона. Удобный подъезд со стороны Центральной улицы.', photos: [images.office, images.apartment[4], images.renovation, images.home] },
+  4: { deal: 'sale', rooms: 2, description: 'Практичная квартира в обжитом микрорайоне. Состояние позволяет обновить интерьер под свой сценарий. Окна выходят во двор, рядом школа, рынок и остановка.', photos: [images.renovation, images.apartment[3], images.apartment[1], images.apartment[4]] },
+  5: { deal: 'sale', rooms: 0, description: 'Ровный участок под индивидуальное строительство. Круглогодичный подъезд, электричество проходит рядом. Спокойная улица и удобная прямоугольная форма участка.', photos: [images.home, images.house, images.apartment[2], images.renovation] }
+};
+listings.forEach(item => Object.assign(item, listingDetails[item.id]));
+listings.push(
+  { id: 6, deal: 'rent', rooms: 1, kind: 'Квартира', dot: 'teal', area: 34, title: '1-комн. квартира, 34 м²', price: 22000, location: 'мкр. Черёмушки, 4 · Снежное', meta: '3 этаж из 5 · На длительный срок', tag: 'Без комиссии', tagColor: 'green', image: images.apartment[2], description: 'Уютная квартира для длительной аренды. Есть мебель, бытовая техника и всё необходимое для переезда. Коммунальные платежи оплачиваются отдельно.', photos: [images.apartment[2], images.apartment[1], images.apartment[4]], facts: [['layers', '3 этаж из 5', 'Этаж'], ['building', 'Панельный дом', 'Тип дома'], ['ruler', '34 м²', 'Общая площадь'], ['calendar', 'От 11 месяцев', 'Срок аренды'], ['pencil', 'С мебелью', 'Состояние'], ['shield', 'Без залога', 'Условия']], features: ['Балкон', 'Санузел раздельный', 'С мебелью', 'Тихий район'] },
+  { id: 7, deal: 'rent', rooms: 2, kind: 'Квартира', dot: 'blue', area: 48, title: '2-комн. квартира, 48 м²', price: 28000, location: 'мкр. 2-й, 17 · Снежное', meta: '4 этаж из 5 · Комнаты раздельные', tag: 'Можно с детьми', tagColor: 'blue', image: images.apartment[3], description: 'Тёплая двухкомнатная квартира с раздельными комнатами. Укомплектована мебелью и техникой, рядом школа и продуктовые магазины.', photos: [images.apartment[3], images.apartment[0], images.apartment[1]], facts: [['layers', '4 этаж из 5', 'Этаж'], ['building', 'Кирпичный дом', 'Тип дома'], ['ruler', '48 м²', 'Общая площадь'], ['calendar', 'От 6 месяцев', 'Срок аренды'], ['pencil', 'Хорошее', 'Состояние'], ['shield', 'Залог 50%', 'Условия']], features: ['Балкон', 'Окна во двор', 'С мебелью', 'Парковка'] },
+  { id: 8, deal: 'sale', rooms: 3, kind: 'Квартира', dot: 'orange', area: 68, title: '3-комн. квартира, 68 м²', price: 3450000, location: 'ул. Советская, 31 · Снежное', meta: '5 этаж из 5 · Автономное отопление', tag: 'Проверено', tagColor: 'green', image: images.apartment[4], description: 'Просторная квартира с тремя изолированными комнатами и автономным отоплением. Чистый подъезд, документы готовы к сделке.', photos: [images.apartment[4], images.apartment[0], images.apartment[2]], facts: [['layers', '5 этаж из 5', 'Этаж'], ['building', 'Кирпичный дом', 'Тип дома'], ['ruler', '68 м²', 'Общая площадь'], ['calendar', '1996 год', 'Год постройки'], ['pencil', 'Жилое', 'Состояние'], ['shield', 'Документы готовы', 'Сделка']], features: ['Балкон', 'Санузел раздельный', 'Автономное отопление', 'Парковка'] },
+  { id: 9, deal: 'rent', rooms: 3, kind: 'Дом', dot: 'violet', area: 86, title: 'Дом, 86 м²', price: 42000, location: 'ул. Молодёжная, 9 · Снежное', meta: 'Участок 5 соток · Все коммуникации', tag: 'На длительный срок', tagColor: 'violet', image: images.house, description: 'Отдельный дом для длительной аренды. Три комнаты, оборудованная кухня, закрытый двор и место для автомобиля.', photos: [images.house, images.home, images.apartment[1]], facts: [['layers', '1 этаж', 'Этаж'], ['building', 'Отдельный дом', 'Тип'], ['ruler', '86 м²', 'Общая площадь'], ['calendar', 'От 6 месяцев', 'Срок аренды'], ['pencil', 'С мебелью', 'Состояние'], ['shield', 'Залог 1 месяц', 'Условия']], features: ['Газ', 'Гараж', 'Дом с участком', 'С мебелью'] }
+);
 
 /* The original mock data was saved through a Windows-1251 editor once.
    Repair those legacy strings at runtime, while keeping the source portable. */
@@ -111,8 +127,10 @@ function normaliseDeep(value) {
 normaliseDeep(listings);
 
 const PRICE_MIN = 0, PRICE_MAX = 15000000;
-const state = { page: 'home', filter: 'Все', query: '', selected: null, gallery: 0, liked: new Set(), modal: null, priceFrom: PRICE_MIN, priceTo: PRICE_MAX, view: 'list' };
+const savedLikes = (() => { try { return JSON.parse(localStorage.getItem('snezhnoe-liked') || '[]'); } catch { return []; } })();
+const state = { page: 'home', deal: 'sale', kind: 'Все', rooms: 'Все', query: '', favoritesOnly: false, selected: null, gallery: 0, liked: new Set(savedLikes), modal: null, mediaMode: 'video', publishStep: 1, priceFrom: PRICE_MIN, priceTo: PRICE_MAX, view: 'list', sort: 'new' };
 const money = value => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
+const escapeAttr = value => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
 const app = document.querySelector('#app');
 
 /* ===================== Компоненты ===================== */
@@ -120,13 +138,13 @@ function header() {
   return `<header class="topbar">
     <button class="brand" data-action="home" aria-label="На главную"><span class="brand-mark">${icon('home')}</span></button>
     <nav class="nav" aria-label="Основная навигация">
-      <button class="${state.filter === 'Все' ? 'is-active' : ''}" data-nav="Купить">Купить</button>
-      <button data-nav="Снять">Снять</button>
+      <button class="${state.deal === 'sale' ? 'is-active' : ''}" data-nav="Купить">Купить</button>
+      <button class="${state.deal === 'rent' ? 'is-active' : ''}" data-nav="Снять">Снять</button>
       <button data-nav="Продать">Продать</button>
     </nav>
     <div class="top-actions">
       <button class="city-pill" data-action="city">${icon('pin')}Снежное${icon('chevronDown')}</button>
-      <button class="icon-btn" data-action="favorites" aria-label="Избранное">${icon('heart')}${state.liked.size ? `<span class="badge">${state.liked.size}</span>` : ''}</button>
+      <button class="icon-btn ${state.favoritesOnly ? 'is-active' : ''}" data-action="favorites" aria-label="Избранное">${icon('heart')}${state.liked.size ? `<span class="badge">${state.liked.size}</span>` : ''}</button>
       <button class="icon-btn" data-action="messages" aria-label="Сообщения">${icon('chat')}</button>
       <button class="primary-btn" data-action="publish">${icon('plus')}<span>Разместить объявление</span></button>
       <span class="account-wrap"><button class="icon-btn avatar-btn" data-action="login" aria-label="Войти">${icon('user')}</button>${icon('chevronDown', 'account-chevron')}</span>
@@ -143,8 +161,8 @@ function hero() {
     <form class="search-panel" id="searchForm">
       <h1>Найдите свой идеальный объект в Снежном</h1>
       <div class="search-row">
-        <div class="search-field">${icon('search')}<input class="search-input" id="searchInput" placeholder="Что ищете? Например, 2-комнатная квартира" value="${state.query}"/></div>
-        <select class="select-box" id="searchKind"><option>Любой тип</option><option>Квартира</option><option>Дом</option><option>Коммерция</option><option>Участок</option></select>
+        <div class="search-field">${icon('search')}<input class="search-input" id="searchInput" placeholder="Что ищете? Например, 2-комнатная квартира" value="${escapeAttr(state.query)}"/></div>
+        <button class="hero-city" type="button" data-action="city">${icon('pin')}<span>Снежное</span>${icon('chevronDown')}</button>
         <button class="search-btn">Найти</button>
       </div>
     </form>
@@ -162,6 +180,7 @@ function promoTiles() {
 }
 
 function itemPhotos(item) {
+  if (item.photos) return item.photos;
   const sets = {
     1: images.apartment,
     2: [images.house, images.home, images.apartment[1], images.apartment[3]],
@@ -182,7 +201,7 @@ function card(item) {
     </div>
     <div class="card-body">
       <h3 class="card-title">${item.title}</h3>
-      <div class="card-price">${money(item.price)}</div>
+      <div class="card-price">${money(item.price)}${item.deal === 'rent' ? '<small> / мес.</small>' : ''}</div>
       <div class="card-meta">${icon('pin', 'meta-icon')}${item.location}<br/><span class="meta-indent">${item.meta}</span></div>
       <div class="card-footer"><span><i class="dot dot-${item.dot}"></i>${item.kind}</span><span class="save-link">${icon(liked ? 'heartFill' : 'heart')}${liked ? 'Сохранено' : 'Сохранить'}</span></div>
     </div>
@@ -192,10 +211,10 @@ function card(item) {
 function filters() {
   const chip = (label, act, active) => `<button class="filter-chip ${active ? 'active' : ''}" data-action="${act}">${label}${icon('chevronDown')}</button>`;
   return `<div class="toolbar">
-    ${chip('Тип недвижимости', 'type', false)}
-    ${chip('Купить', 'buyMode', state.filter === 'Все')}
+    ${chip(state.kind === 'Все' ? 'Тип недвижимости' : state.kind, 'type', state.kind !== 'Все')}
+    ${chip(state.deal === 'sale' ? 'Купить' : 'Снять', 'deal', true)}
     ${chip('Цена', 'price', false)}
-    ${chip('Комнаты', 'rooms', false)}
+    ${chip(state.rooms === 'Все' ? 'Комнаты' : `${state.rooms} комн.`, 'rooms', state.rooms !== 'Все')}
     ${chip('Площадь', 'area', false)}
     <button class="filter-chip" data-action="more">${icon('sliders')}Ещё фильтры</button>
     <span class="toolbar-spacer"></span>
@@ -207,41 +226,47 @@ function filters() {
 }
 
 function priceSlider() {
-  const pct = v => Math.round(((v - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100);
+  const max = state.deal === 'rent' ? 100000 : PRICE_MAX;
+  const to = Math.min(state.priceTo, max);
+  const pct = v => Math.round(((v - PRICE_MIN) / (max - PRICE_MIN)) * 100);
   return `<div class="price-slider">
-    <div class="slider-track"><div class="slider-range" style="left:${pct(state.priceFrom)}%;right:${100 - pct(state.priceTo)}%"></div></div>
-    <input type="range" class="range-input range-from" min="${PRICE_MIN}" max="${PRICE_MAX}" step="50000" value="${state.priceFrom}" id="priceFromRange"/>
-    <input type="range" class="range-input range-to" min="${PRICE_MIN}" max="${PRICE_MAX}" step="50000" value="${state.priceTo}" id="priceToRange"/>
+    <div class="slider-track"><div class="slider-range" style="left:${pct(state.priceFrom)}%;right:${100 - pct(to)}%"></div></div>
+    <input type="range" class="range-input range-from" min="${PRICE_MIN}" max="${max}" step="${state.deal === 'rent' ? 1000 : 50000}" value="${Math.min(state.priceFrom, max)}" id="priceFromRange"/>
+    <input type="range" class="range-input range-to" min="${PRICE_MIN}" max="${max}" step="${state.deal === 'rent' ? 1000 : 50000}" value="${to}" id="priceToRange"/>
   </div>`;
 }
 
 function sidebar() {
-  const kinds = [['Квартира', 1246], ['Дом', 357], ['Коммерческая', 126], ['Участок', 98], ['Гараж', 42]];
+  const kinds = ['Квартира', 'Дом', 'Коммерция', 'Участок'];
+  const maxPrice = state.deal === 'rent' ? 100000 : PRICE_MAX;
   return `<aside class="sidebar">
     <h3 class="side-title">Фильтры <button class="reset-link" data-action="reset">Сбросить всё</button></h3>
-    ${kinds.map((k, i) => `<label class="check"><input type="checkbox" ${i === 0 ? 'checked' : ''}/><span class="check-box"></span>${k[0]} <span class="check-count">${k[1]}</span></label>`).join('')}
+    ${kinds.map(k => `<label class="check"><input type="radio" name="kind" data-kind="${k}" ${state.kind === k ? 'checked' : ''}/><span class="check-box"></span>${k} <span class="check-count">${listings.filter(item => item.deal === state.deal && item.kind === k).length}</span></label>`).join('')}
     <hr/>
     <h3 class="side-title">Цена, ₽</h3>
     <div class="range-row">
       <input class="price-input" id="priceFromInput" value="${state.priceFrom.toLocaleString('ru-RU')}"/>
       <span class="range-sep">—</span>
-      <input class="price-input" id="priceToInput" value="${state.priceTo.toLocaleString('ru-RU')}"/>
+      <input class="price-input" id="priceToInput" value="${Math.min(state.priceTo, maxPrice).toLocaleString('ru-RU')}"/>
     </div>
     ${priceSlider()}
     <h3 class="side-title" style="margin-top:22px">Комнаты</h3>
-    <label class="check"><input type="checkbox"/><span class="check-box"></span>1 комната</label>
-    <label class="check"><input type="checkbox" checked/><span class="check-box"></span>2 комнаты</label>
-    <label class="check"><input type="checkbox"/><span class="check-box"></span>3 комнаты</label>
+    ${[1,2,3,4].map(room => `<label class="check"><input type="radio" name="rooms" data-rooms="${room}" ${Number(state.rooms) === room ? 'checked' : ''}/><span class="check-box"></span>${room === 4 ? '4+ комнаты' : room + (room === 1 ? ' комната' : ' комнаты')}</label>`).join('')}
   </aside>`;
 }
 
 function homePage() {
   const q = state.query.trim().toLowerCase();
-  const visible = listings.filter(item =>
-    (state.filter === 'Все' || state.filter === 'Купить' || item.kind === state.filter) &&
-    item.price >= state.priceFrom && item.price <= state.priceTo &&
+  const priceCeiling = state.deal === 'rent' ? Math.min(state.priceTo, 100000) : state.priceTo;
+  const filtered = listings.filter(item =>
+    item.deal === state.deal &&
+    (state.kind === 'Все' || item.kind === state.kind) &&
+    (state.rooms === 'Все' || item.rooms >= Number(state.rooms)) &&
+    (!state.favoritesOnly || state.liked.has(item.id)) &&
+    item.price >= state.priceFrom && item.price <= priceCeiling &&
     (!q || `${item.title} ${item.location} ${item.kind}`.toLowerCase().includes(q))
   );
+  const visible = [...filtered].sort((a, b) => state.sort === 'cheap' ? a.price - b.price : state.sort === 'expensive' ? b.price - a.price : b.id - a.id);
   return `${header()}${hero()}<main class="main-content">
     ${filters()}
     <div class="layout">
@@ -249,13 +274,17 @@ function homePage() {
       <section class="results-column">
         ${promoTiles()}
         <div class="results-head">
-          <h2>Актуальные предложения <span class="results-count">${visible.length ? '· ' + visible.length + ' объявлений' : ''}</span></h2>
-          <select class="sort-select"><option>Сначала новые</option><option>Сначала дешевле</option><option>Сначала дороже</option></select>
+          <h2>${state.deal === 'rent' ? 'Недвижимость в аренду' : 'Актуальные предложения'} <span class="results-count">${visible.length ? '· ' + visible.length + ' объявлений' : ''}</span></h2>
+          <select class="sort-select" id="sortSelect"><option value="new" ${state.sort === 'new' ? 'selected' : ''}>Сначала новые</option><option value="cheap" ${state.sort === 'cheap' ? 'selected' : ''}>Сначала дешевле</option><option value="expensive" ${state.sort === 'expensive' ? 'selected' : ''}>Сначала дороже</option></select>
         </div>
-        <div class="listing-grid">${visible.length ? visible.map(card).join('') : `<div class="empty">По вашему запросу ничего не найдено.<br/><button class="reset-link" data-action="reset">Сбросить фильтры</button></div>`}</div>
+        ${state.view === 'map' ? catalogMap(visible) : `<div class="listing-grid">${visible.length ? visible.map(card).join('') : `<div class="empty">По вашему запросу ничего не найдено.<br/><button class="reset-link" data-action="reset">Сбросить фильтры</button></div>`}</div>`}
       </section>
     </div>
   </main>`;
+}
+
+function catalogMap(items) {
+  return `<div class="catalog-map"><div class="catalog-map-canvas">${miniMap('Снежное')}<span class="map-price pin-one">${items[0] ? money(items[0].price) : ''}</span><span class="map-price pin-two">${items[1] ? money(items[1].price) : ''}</span><span class="map-price pin-three">${items[2] ? money(items[2].price) : ''}</span></div><div class="map-list">${items.slice(0, 3).map(card).join('') || '<div class="empty">Нет объектов</div>'}</div></div>`;
 }
 
 function investmentsPage() {
@@ -267,8 +296,8 @@ function investmentsPage() {
     </section>
     <section class="invest-section"><div class="section-heading"><div><h2>Проекты в работе</h2><p>Примеры демонстрационной витрины для инвестора.</p></div><span class="invest-note">Данные — ориентиры для презентации</span></div>
       <div class="invest-grid">
-        <article class="project-card"><div class="before-after"><img src="${images.renovation}" alt="Квартира до обновления"/><img src="${images.apartment[0]}" alt="Квартира после обновления"/></div><div class="project-body"><span class="project-label">Квартира · 45 м²</span><h3>мкр. 3-й, 8</h3><p>Обновление отделки, кухни и инженерных узлов. Работа с объектом ведётся после проверки документов.</p><div class="project-stages"><span>01 Осмотр</span><span>02 Смета</span><span>03 Ремонт</span></div></div></article>
-        <article class="project-card"><div class="before-after"><img src="${images.home}" alt="Дом до обновления"/><img src="${images.house}" alt="Дом после обновления"/></div><div class="project-body"><span class="project-label">Дом · 120 м²</span><h3>ул. Лесная, 23</h3><p>Оценка состояния дома и коммуникаций, поэтапное обновление фасада и внутренних помещений.</p><div class="project-stages"><span>01 Анализ</span><span>02 План работ</span><span>03 Реализация</span></div></div></article>
+        <article class="project-card"><div class="before-after"><div><span>До</span><img src="${images.renovation}" alt="Квартира до обновления"/></div><div><span>После</span><img src="${images.apartment[0]}" alt="Квартира после обновления"/></div></div><div class="project-body"><span class="project-label">Квартира · 45 м²</span><h3>мкр. 3-й, 8</h3><p>Обновление отделки, кухни и инженерных узлов. Работа с объектом ведётся после проверки документов.</p><div class="project-economics"><span><small>Покупка</small><b>1,95 млн ₽</b></span><span><small>Ремонт</small><b>от 650 тыс. ₽</b></span><span><small>Срок</small><b>3–4 месяца</b></span></div><div class="project-stages"><span>01 Осмотр</span><span>02 Смета</span><span>03 Ремонт</span></div></div></article>
+        <article class="project-card"><div class="before-after"><div><span>До</span><img src="${images.home}" alt="Дом до обновления"/></div><div><span>После</span><img src="${images.house}" alt="Дом после обновления"/></div></div><div class="project-body"><span class="project-label">Дом · 120 м²</span><h3>ул. Лесная, 23</h3><p>Оценка состояния дома и коммуникаций, поэтапное обновление фасада и внутренних помещений.</p><div class="project-economics"><span><small>Покупка</small><b>6,2 млн ₽</b></span><span><small>Работы</small><b>от 1,4 млн ₽</b></span><span><small>Срок</small><b>5–6 месяцев</b></span></div><div class="project-stages"><span>01 Анализ</span><span>02 План работ</span><span>03 Реализация</span></div></div></article>
       </div>
     </section>
     <section class="invest-process"><h2>Как устроен процесс</h2><div><article><b>1</b><h3>Находим объект</h3><p>Сверяем локацию, документы и реальное состояние.</p></article><article><b>2</b><h3>Собираем план</h3><p>Фиксируем гипотезы, бюджет работ и риски.</p></article><article><b>3</b><h3>Показываем ход</h3><p>В презентации доступны этапы «до / после».</p></article></div></section>
@@ -299,7 +328,7 @@ function detailPage(item) {
   const thumbs = photos.slice(0, maxThumbs);
   const extra = photos.length - maxThumbs;
   return `${header()}<main class="detail-page">
-    <div class="breadcrumbs"><span>Главная</span><span class="crumb-sep">·</span><span>Купить</span><span class="crumb-sep">·</span><span>Квартиры</span><span class="crumb-sep">·</span><span>${item.title}</span></div>
+    <div class="breadcrumbs"><button data-action="home">Главная</button><span class="crumb-sep">·</span><button data-nav="${item.deal === 'rent' ? 'Снять' : 'Купить'}">${item.deal === 'rent' ? 'Снять' : 'Купить'}</button><span class="crumb-sep">·</span><span>${item.kind}</span><span class="crumb-sep">·</span><span>${item.title}</span></div>
     <button class="back-link" data-action="home">${icon('arrowLeft')}Назад к списку</button>
     <div class="detail-layout">
       <section class="detail-left">
@@ -307,6 +336,8 @@ function detailPage(item) {
           <div class="main-photo">
             <img src="${photos[activeIdx]}" alt="${item.title}"/>
             <span class="counter">${activeIdx + 1} / ${photos.length}</span>
+            <button class="gallery-arrow gallery-prev" data-action="galleryPrev" aria-label="Предыдущее фото">${icon('arrowLeft')}</button>
+            <button class="gallery-arrow gallery-next" data-action="galleryNext" aria-label="Следующее фото">${icon('arrowLeft')}</button>
             <div class="photo-tools">
               <button class="tool-pill" data-action="video">${icon('play')}Видео</button>
               <button class="tool-pill" data-action="planLayout">${icon('layout')}Планировка</button>
@@ -315,6 +346,11 @@ function detailPage(item) {
           </div>
           <div class="thumb-col">${thumbs.map((photo, i) => `<button class="thumb ${i === activeIdx ? 'active' : ''}" data-gallery="${i}"><img src="${photo}" alt="Фото ${i + 1}"/>${i === maxThumbs - 1 && extra > 0 ? `<span class="thumb-more">+${extra}</span>` : ''}</button>`).join('')}</div>
         </div>
+        <section class="mobile-summary">
+          <span>${item.kind} · ${item.location}</span><h1>${item.title}</h1><strong>${money(item.price)}${item.deal === 'rent' ? ' / мес.' : ''}</strong>
+          <button class="contact-btn" data-action="contact">Записаться на просмотр</button>
+          <button class="phone-btn" data-action="phone">${icon('phone')}Показать телефон</button>
+        </section>
         <div class="detail-lower">
           <section class="description-panel">
             <div class="tabs">
@@ -323,7 +359,7 @@ function detailPage(item) {
               <button class="tab" data-tab="map">На карте</button>
             </div>
             <div id="detailTabContent">
-              <p class="description">Светлая и уютная 2-комнатная квартира с современным ремонтом в новом доме. Удобная планировка: просторная кухня-гостиная, отдельная спальня, гардеробная. Окна выходят во двор, тихо и зелено. В шаговой доступности магазины, школы, детские сады и остановки общественного транспорта.</p>
+              <p class="description">${item.description}</p>
               <div class="feature-row">${item.features.map(f => `<span class="feature">${icon(featureIcons[f] || 'shield')}${f}</span>`).join('')}</div>
             </div>
           </section>
@@ -339,7 +375,7 @@ function detailPage(item) {
         <div class="price-card">
           <div class="price-card-top"><h1>${item.title}</h1><button class="icon-btn share-btn" data-action="share" aria-label="Поделиться">${icon('share')}</button></div>
           <div class="location">${icon('pin', 'meta-icon')}${item.location}</div>
-          <div class="detail-price">${money(item.price)}<small>${Math.round(item.price / item.area).toLocaleString('ru-RU')} ₽ / ${item.kind === 'Участок' ? 'сотку' : 'м²'}</small></div>
+          <div class="detail-price">${money(item.price)}${item.deal === 'rent' ? '<small>в месяц · коммунальные платежи по условиям объявления</small>' : `<small>${Math.round(item.price / item.area).toLocaleString('ru-RU')} ₽ / ${item.kind === 'Участок' ? 'сотку' : 'м²'}</small>`}</div>
           <div class="detail-actions">
             <button class="contact-btn" data-action="contact">Записаться на просмотр</button>
             <button class="message-btn" data-action="contact">${icon('chat')}Написать</button>
@@ -357,14 +393,25 @@ function detailPage(item) {
 function modal() {
   if (!state.modal) return '';
   const closeBtn = `<button class="modal-close" data-action="close" aria-label="Закрыть">${icon('close')}</button>`;
-  if (state.modal === 'contact') return `<div class="modal-backdrop" data-close><div class="modal" role="dialog" aria-modal="true">${closeBtn}<h2>Написать продавцу</h2><p>Оставьте контакты — риелтор свяжется с вами и организует просмотр.</p><label>Имя</label><input id="contactName" placeholder="Как к вам обращаться?"/><label>Телефон</label><input id="contactPhone" placeholder="+7 (___) ___-__-__"/><label>Сообщение</label><textarea id="contactMessage">Здравствуйте! Хочу узнать подробнее об объекте.</textarea><div class="modal-actions"><button class="secondary-btn" data-action="close">Отмена</button><button class="primary-btn" data-action="send">Отправить заявку</button></div></div></div>`;
-  if (state.modal === 'publish') return `<div class="modal-backdrop" data-close><div class="modal" role="dialog" aria-modal="true">${closeBtn}<h2>Разместить объявление</h2><p>В прототипе заявка сохраняется только демонстрационно.</p><label>Ваше имя</label><input placeholder="Имя"/><label>Телефон</label><input placeholder="+7 (___) ___-__-__"/><label>Что хотите разместить?</label><textarea placeholder="Например: 2-комнатную квартиру в Центральном районе"></textarea><div class="modal-actions"><button class="secondary-btn" data-action="close">Отмена</button><button class="primary-btn" data-action="sendPublish">Отправить</button></div></div></div>`;
-  return `<div class="modal-backdrop" data-close><div class="modal">${closeBtn}<h2>${state.modal === 'phone' ? 'Телефон продавца' : 'Скоро будет доступно'}</h2><p>${state.modal === 'phone' ? 'В полноценной версии здесь появится защищённый номер продавца, +7 (938) ••• •• ••.' : 'Эта часть прототипа подготовлена для следующего этапа.'}</p><div class="modal-actions"><button class="primary-btn" data-action="close">Понятно</button></div></div></div>`;
+  if (state.modal === 'contact') { const investment = state.page === 'invest'; return `<div class="modal-backdrop" data-close><div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">${closeBtn}<span class="modal-kicker">${investment ? 'Инвестиционный проект' : 'Просмотр объекта'}</span><h2 id="contactTitle">${investment ? 'Получить расчёт проекта' : 'Записаться на удобное время'}</h2><p>${investment ? 'Оставьте контакты — подготовим демонстрационную структуру расчёта и рисков.' : 'Оставьте контакты — Ирина уточнит детали и подтвердит просмотр.'}</p><label for="contactName">Имя</label><input id="contactName" autocomplete="name" placeholder="Как к вам обращаться?"/><label for="contactPhone">Телефон</label><input id="contactPhone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__"/><label for="contactMessage">Сообщение</label><textarea id="contactMessage">${investment ? 'Здравствуйте! Хочу получить расчёт инвестиционного проекта.' : 'Здравствуйте! Хочу посмотреть объект.'}</textarea><div class="form-error" id="contactError"></div><div class="modal-actions"><button class="secondary-btn" data-action="close">Отмена</button><button class="primary-btn" data-action="send">Отправить заявку</button></div></div></div>`; }
+  if (state.modal === 'filters') return `<div class="modal-backdrop" data-close><div class="modal filters-modal" role="dialog" aria-modal="true">${closeBtn}<span class="modal-kicker">Каталог</span><h2>Фильтры недвижимости</h2><div class="filter-form"><label>Сделка<select id="modalDeal"><option value="sale" ${state.deal === 'sale' ? 'selected' : ''}>Купить</option><option value="rent" ${state.deal === 'rent' ? 'selected' : ''}>Снять</option></select></label><label>Тип<select id="modalKind"><option>Все</option>${['Квартира','Дом','Коммерция','Участок'].map(k => `<option ${state.kind === k ? 'selected' : ''}>${k}</option>`).join('')}</select></label><label>Комнаты<select id="modalRooms"><option>Все</option>${[1,2,3,4].map(r => `<option value="${r}" ${Number(state.rooms) === r ? 'selected' : ''}>${r === 4 ? '4+' : r}</option>`).join('')}</select></label><label>Цена до<input id="modalPrice" inputmode="numeric" value="${Math.min(state.priceTo, state.deal === 'rent' ? 100000 : PRICE_MAX).toLocaleString('ru-RU')}"/></label></div><div class="modal-actions"><button class="secondary-btn" data-action="reset">Сбросить</button><button class="primary-btn" data-action="applyFilters">Показать объекты</button></div></div></div>`;
+  if (state.modal === 'publish') {
+    const step = state.publishStep;
+    const content = step === 1 ? `<label>Тип сделки</label><div class="choice-grid"><button class="choice-card is-active" data-choice>Продать</button><button class="choice-card" data-choice>Сдать</button></div><label>Тип недвижимости</label><select id="publishKind"><option>Квартира</option><option>Дом</option><option>Участок</option><option>Коммерция</option></select>` : step === 2 ? `<label>Адрес объекта</label><input placeholder="Снежное, улица и номер дома"/><div class="form-two"><label>Цена, ₽<input inputmode="numeric" placeholder="2 850 000"/></label><label>Площадь, м²<input inputmode="numeric" placeholder="56"/></label></div><label>Короткое описание</label><textarea placeholder="Состояние, отопление, коммуникации"></textarea>` : `<label>Фотографии</label><button class="upload-demo" data-action="noop">${icon('photo')}<span>Добавить фотографии<small>В демо будет показан предпросмотр</small></span></button><div class="form-two"><label>Ваше имя<input placeholder="Имя"/></label><label>Телефон<input inputmode="tel" placeholder="+7 (___) ___-__-__"/></label></div>`;
+    return `<div class="modal-backdrop" data-close><div class="modal publish-modal" role="dialog" aria-modal="true">${closeBtn}<span class="modal-kicker">Шаг ${step} из 3</span><h2>Разместить объявление</h2><div class="stepper"><i class="active"></i><i class="${step > 1 ? 'active' : ''}"></i><i class="${step > 2 ? 'active' : ''}"></i></div>${content}<div class="modal-actions">${step > 1 ? '<button class="secondary-btn" data-action="publishBack">Назад</button>' : '<button class="secondary-btn" data-action="close">Отмена</button>'}<button class="primary-btn" data-action="${step < 3 ? 'publishNext' : 'sendPublish'}">${step < 3 ? 'Продолжить' : 'Разместить'}</button></div></div></div>`;
+  }
+  if (state.modal === 'success') return `<div class="modal-backdrop"><div class="modal success-modal" role="dialog" aria-modal="true"><span class="success-icon">${icon('shield')}</span><h2>Заявка принята</h2><p>Это демонстрационный сценарий: данные никуда не отправлялись. В реальном продукте здесь появится номер заявки.</p><div class="modal-actions"><button class="primary-btn" data-action="close">Вернуться к каталогу</button></div></div></div>`;
+  if (state.modal === 'messages') return `<div class="modal-backdrop" data-close><div class="modal inbox-modal">${closeBtn}<span class="modal-kicker">Сообщения</span><h2>Диалоги по объектам</h2><div class="demo-dialog"><img src="${images.agent}" alt="Ирина Петрова"/><div><b>Ирина Петрова</b><p>Подтверждаю просмотр завтра в 15:00</p></div><time>12:40</time></div><div class="demo-dialog"><span class="dialog-house">${icon('home')}</span><div><b>Дом на Лесной</b><p>Владелец добавил документы объекта</p></div><time>вчера</time></div><div class="modal-actions"><button class="primary-btn" data-action="close">Готово</button></div></div></div>`;
+  if (state.modal === 'profile') return `<div class="modal-backdrop" data-close><div class="modal profile-modal">${closeBtn}<span class="modal-kicker">Демо-профиль</span><div class="profile-head"><span>${icon('user')}</span><div><h2>Алексей</h2><p>Покупатель · Снежное</p></div></div><div class="profile-links"><button data-action="favorites">${icon('heart')}Избранные объекты<b>${state.liked.size}</b></button><button data-action="messages">${icon('chat')}Сообщения<b>2</b></button><button data-action="publish">${icon('plus')}Мои объявления</button></div></div></div>`;
+  if (state.modal === 'media') return `<div class="modal-backdrop" data-close><div class="modal media-modal">${closeBtn}<span class="modal-kicker">${state.mediaMode === 'video' ? 'Видеообзор' : 'Планировка'}</span><h2>${state.selected?.title || 'Объект'}</h2><div class="media-preview"><img src="${itemPhotos(state.selected)[state.mediaMode === 'video' ? 0 : Math.min(2, itemPhotos(state.selected).length - 1)]}" alt="${state.mediaMode === 'video' ? 'Видеообзор объекта' : 'Планировка объекта'}"/>${state.mediaMode === 'video' ? `<span>${icon('play')}</span>` : ''}</div><p>${state.mediaMode === 'video' ? 'Демонстрационный превью-блок видеообзора объекта.' : 'Демонстрационное изображение планировки и зонирования.'}</p><div class="modal-actions"><button class="primary-btn" data-action="close">Закрыть</button></div></div></div>`;
+  if (state.modal === 'phone') return `<div class="modal-backdrop" data-close><div class="modal phone-modal">${closeBtn}<span class="modal-kicker">Риелтор</span><h2>Ирина Петрова</h2><a href="tel:+79381234567" class="demo-phone">+7 (938) 123-45-67</a><p>Демонстрационный номер для презентации сервиса.</p><div class="modal-actions"><button class="secondary-btn" data-action="copyPhone">Скопировать</button><button class="primary-btn" data-action="close">Готово</button></div></div></div>`;
+  return '';
 }
 
 function render() {
   const view = state.page === 'detail' ? detailPage(state.selected) : state.page === 'invest' ? investmentsPage() : homePage();
   app.innerHTML = `<div class="app-shell">${view}</div>${modal()}`;
+  document.body.classList.toggle('modal-open', Boolean(state.modal));
   repairVisibleCopy();
   bind();
 }
@@ -388,9 +435,12 @@ function repairVisibleCopy() {
 function toast(message) { const el = document.querySelector('#toast'); el.textContent = message; el.classList.add('show'); clearTimeout(window.__toast); window.__toast = setTimeout(() => el.classList.remove('show'), 2300); }
 
 function bind() {
-  document.querySelectorAll('[data-nav]').forEach(btn => btn.addEventListener('click', () => { state.filter = btn.dataset.nav === 'Купить' ? 'Все' : btn.dataset.nav === 'Снять' ? 'Квартира' : 'Все'; render(); toast(`Раздел «${btn.dataset.nav}» открыт`); }));
+  document.querySelectorAll('[data-nav]').forEach(btn => btn.addEventListener('click', () => {
+    if (btn.dataset.nav === 'Продать') { state.modal = 'publish'; state.publishStep = 1; render(); return; }
+    setDeal(btn.dataset.nav === 'Снять' ? 'rent' : 'sale'); navigate('catalog');
+  }));
   document.querySelectorAll('[data-open]').forEach(cardEl => cardEl.addEventListener('click', e => { if (e.target.closest('[data-like]')) return; openListing(Number(cardEl.dataset.open)); }));
-  document.querySelectorAll('[data-like]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); const id = Number(btn.dataset.like); state.liked.has(id) ? state.liked.delete(id) : state.liked.add(id); render(); toast(state.liked.has(id) ? 'Добавлено в избранное' : 'Удалено из избранного'); }));
+  document.querySelectorAll('[data-like]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); const id = Number(btn.dataset.like); state.liked.has(id) ? state.liked.delete(id) : state.liked.add(id); localStorage.setItem('snezhnoe-liked', JSON.stringify([...state.liked])); render(); toast(state.liked.has(id) ? 'Добавлено в избранное' : 'Удалено из избранного'); }));
   document.querySelectorAll('[data-gallery]').forEach(btn => btn.addEventListener('click', () => { state.gallery = Number(btn.dataset.gallery); render(); }));
   document.querySelectorAll('[data-action]').forEach(btn => btn.addEventListener('click', () => action(btn.dataset.action)));
   document.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', e => { if (e.target === el) { state.modal = null; render(); } }));
@@ -401,10 +451,17 @@ function bind() {
     const item = state.selected;
     if (tab.dataset.tab === 'features') content.innerHTML = `<div class="feature-row">${item.features.map(f => `<span class="feature">${icon(featureIcons[f] || 'shield')}${f}</span>`).join('')}</div><div class="facts facts-inline">${item.facts.map(([ic, value, label]) => `<div class="fact">${icon(ic, 'fact-icon')}<div><strong>${value}</strong><span>${label}</span></div></div>`).join('')}</div>`;
     else if (tab.dataset.tab === 'map') content.innerHTML = `<p class="description">Объект расположен по адресу ${item.location}. Точный адрес открывается после обращения к продавцу.</p>${miniMap(item.location)}`;
-    else content.innerHTML = `<p class="description">Светлая и уютная 2-комнатная квартира с современным ремонтом в новом доме. Удобная планировка: просторная кухня-гостиная, отдельная спальня, гардеробная. Окна выходят во двор, тихо и зелено. В шаговой доступности магазины, школы, детские сады и остановки общественного транспорта.</p><div class="feature-row">${item.features.map(f => `<span class="feature">${icon(featureIcons[f] || 'shield')}${f}</span>`).join('')}</div>`;
+    else content.innerHTML = `<p class="description">${item.description}</p><div class="feature-row">${item.features.map(f => `<span class="feature">${icon(featureIcons[f] || 'shield')}${f}</span>`).join('')}</div>`;
   }));
   const searchForm = document.querySelector('#searchForm');
   if (searchForm) searchForm.addEventListener('submit', e => { e.preventDefault(); state.query = document.querySelector('#searchInput').value; render(); toast(state.query ? `Поиск: ${state.query}` : 'Показываем все объекты'); });
+  document.querySelectorAll('[data-kind]').forEach(input => input.addEventListener('change', () => { state.kind = input.dataset.kind; render(); }));
+  document.querySelectorAll('[data-rooms]').forEach(input => input.addEventListener('change', () => { state.rooms = input.dataset.rooms; render(); }));
+  const sortSelect = document.querySelector('#sortSelect');
+  if (sortSelect) sortSelect.addEventListener('change', () => { state.sort = sortSelect.value; render(); });
+  const phoneInput = document.querySelector('#contactPhone');
+  if (phoneInput) phoneInput.addEventListener('input', () => { const digits = phoneInput.value.replace(/\D/g, '').replace(/^8/, '7').slice(0, 11); const body = digits.slice(1); phoneInput.value = '+7' + (body.length ? ' (' + body.slice(0,3) : '') + (body.length >= 3 ? ') ' + body.slice(3,6) : '') + (body.length >= 6 ? '-' + body.slice(6,8) : '') + (body.length >= 8 ? '-' + body.slice(8,10) : ''); });
+  document.querySelectorAll('[data-choice]').forEach(choice => choice.addEventListener('click', () => { document.querySelectorAll('[data-choice]').forEach(el => el.classList.remove('is-active')); choice.classList.add('is-active'); }));
 
   const fromRange = document.querySelector('#priceFromRange');
   const toRange = document.querySelector('#priceToRange');
@@ -422,7 +479,7 @@ function bind() {
   const fromInput = document.querySelector('#priceFromInput');
   const toInput = document.querySelector('#priceToInput');
   if (fromInput && toInput) {
-    const parse = v => Math.max(PRICE_MIN, Math.min(PRICE_MAX, Number(v.replace(/\D/g, '')) || 0));
+    const parse = v => Math.max(PRICE_MIN, Math.min(state.deal === 'rent' ? 100000 : PRICE_MAX, Number(v.replace(/\D/g, '')) || 0));
     fromInput.addEventListener('change', () => { state.priceFrom = Math.min(parse(fromInput.value), state.priceTo); render(); });
     toInput.addEventListener('change', () => { state.priceTo = Math.max(parse(toInput.value), state.priceFrom); render(); });
   }
@@ -433,31 +490,37 @@ function syncSliderVisual() {
   const toRange = document.querySelector('#priceToRange');
   const rangeEl = document.querySelector('.slider-range');
   if (!fromRange || !toRange || !rangeEl) return;
-  const pct = v => ((v - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100;
+  const max = Number(toRange.max);
+  const pct = v => ((v - PRICE_MIN) / (max - PRICE_MIN)) * 100;
   rangeEl.style.left = pct(Number(fromRange.value)) + '%';
   rangeEl.style.right = (100 - pct(Number(toRange.value))) + '%';
 }
 
 function action(name) {
   if (name === 'home') { navigate('home'); return; }
-  if (name === 'publish') state.modal = 'publish';
+  if (name === 'publish') { state.modal = 'publish'; state.publishStep = 1; }
   else if (name === 'contact') state.modal = 'contact';
   else if (name === 'phone') state.modal = 'phone';
   else if (name === 'close') state.modal = null;
-  else if (name === 'send' || name === 'sendPublish') { state.modal = null; toast('Готово — заявка отправлена в демо-режиме'); }
-  else if (name === 'reset') { state.filter = 'Все'; state.query = ''; state.priceFrom = PRICE_MIN; state.priceTo = PRICE_MAX; }
-  else if (name === 'favorites') toast(state.liked.size ? `В избранном объектов: ${state.liked.size}` : 'В избранном пока пусто');
-  else if (name === 'messages') toast('Сообщения появятся после подключения backend');
-  else if (name === 'login') toast('Авторизация будет в следующей версии');
+  else if (name === 'send') { const n = document.querySelector('#contactName'); const p = document.querySelector('#contactPhone'); if (!n?.value.trim() || (p?.value.replace(/\D/g, '').length || 0) < 11) { const err = document.querySelector('#contactError'); if (err) err.textContent = 'Введите имя и полный номер телефона'; return; } state.modal = 'success'; }
+  else if (name === 'sendPublish') state.modal = 'success';
+  else if (name === 'publishNext') state.publishStep = Math.min(3, state.publishStep + 1);
+  else if (name === 'publishBack') state.publishStep = Math.max(1, state.publishStep - 1);
+  else if (name === 'reset') { state.kind = 'Все'; state.rooms = 'Все'; state.query = ''; state.favoritesOnly = false; state.priceFrom = PRICE_MIN; state.priceTo = state.deal === 'rent' ? 100000 : PRICE_MAX; }
+  else if (name === 'favorites') { state.favoritesOnly = !state.favoritesOnly; navigate('catalog'); toast(state.favoritesOnly ? `Избранное: ${state.liked.size}` : 'Показаны все объекты'); return; }
+  else if (name === 'messages') state.modal = 'messages';
+  else if (name === 'login') state.modal = 'profile';
   else if (name === 'city') toast('В прототипе доступен город Снежное');
-  else if (name === 'seller') toast('Открываем профиль продавца в полной версии');
-  else if (name === 'share') toast('Ссылка на объект скопирована');
-  else if (name === 'video' || name === 'planLayout') toast('Медиа появится в следующей версии прототипа');
+  else if (name === 'seller') { state.kind = 'Все'; navigate('catalog'); toast('Показаны объявления Ирины Петровой'); return; }
+  else if (name === 'share') { navigator.clipboard?.writeText(location.href); toast('Ссылка на объект скопирована'); }
+  else if (name === 'video' || name === 'planLayout') { state.mediaMode = name === 'video' ? 'video' : 'plan'; state.modal = 'media'; }
   else if (name === 'investContact') state.modal = 'contact';
-  else if (name === 'buyMode') { state.filter = 'Все'; }
-  else if (name === 'type' || name === 'price' || name === 'rooms' || name === 'area' || name === 'more') toast('Фильтр отмечен для следующего шага прототипа');
+  else if (name === 'galleryPrev' || name === 'galleryNext') { const photos = itemPhotos(state.selected); state.gallery = (state.gallery + (name === 'galleryNext' ? 1 : photos.length - 1)) % photos.length; }
+  else if (name === 'applyFilters') { const deal = document.querySelector('#modalDeal')?.value || state.deal; setDeal(deal); state.kind = document.querySelector('#modalKind')?.value || 'Все'; state.rooms = document.querySelector('#modalRooms')?.value || 'Все'; state.priceTo = Number((document.querySelector('#modalPrice')?.value || '').replace(/\D/g, '')) || (deal === 'rent' ? 100000 : PRICE_MAX); state.modal = null; }
+  else if (name === 'copyPhone') { navigator.clipboard?.writeText('+7 938 123-45-67'); toast('Телефон скопирован'); }
+  else if (name === 'deal' || name === 'type' || name === 'price' || name === 'rooms' || name === 'area' || name === 'more') state.modal = 'filters';
   else if (name === 'list' || name === 'map') { state.view = name; toast(name === 'map' ? 'Режим карты выбран' : 'Режим списка выбран'); }
-  else if (name.startsWith('promo-')) { /* unreachable, promo uses data-promo */ }
+  else if (name === 'noop') { toast('Фотографии добавлены в демо-режиме'); return; }
   render();
 }
 
@@ -466,9 +529,18 @@ document.addEventListener('click', e => {
   if (!promo) return;
   const key = promo.dataset.promo;
   if (key === 'invest') navigate('invest');
-  else if (key === 'sell') { state.modal = 'publish'; render(); }
-  else { state.filter = key === 'rent' ? 'Квартира' : 'Все'; navigate('catalog'); }
+  else if (key === 'sell') { state.modal = 'publish'; state.publishStep = 1; render(); }
+  else { setDeal(key === 'rent' ? 'rent' : 'sale'); navigate('catalog'); }
 });
+
+function setDeal(deal) {
+  state.deal = deal;
+  state.kind = 'Все';
+  state.rooms = 'Все';
+  state.priceFrom = PRICE_MIN;
+  state.priceTo = deal === 'rent' ? 100000 : PRICE_MAX;
+  state.favoritesOnly = false;
+}
 
 function openListing(id) {
   state.selected = listings.find(item => item.id === id);
@@ -494,4 +566,5 @@ function applyRoute() {
 }
 
 window.addEventListener('hashchange', applyRoute);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.modal) { state.modal = null; render(); } });
 applyRoute();
