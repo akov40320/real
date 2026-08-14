@@ -208,6 +208,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
 .phone-btn { background: #fff; border: 1.5px solid var(--blue); color: var(--blue); }
 .phone-btn:hover { background: var(--blue-tint); }
 .phone-btn .icon { width: 15px; height: 15px; }
+.message-btn { background: #fff; border: 1.5px solid var(--line); color: #45536a; }
+.message-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-tint); }
+.message-btn .icon { width: 15px; height: 15px; }
 .protect { display: flex; align-items: center; justify-content: center; gap: 6px; color: #6a7890; font-size: 11px; text-align: center; margin-bottom: 14px; }
 .protect .icon { width: 13px; height: 13px; color: #9aa6b8; }
 .facts { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); }
@@ -232,6 +235,39 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
 .map-pin { position: absolute; left: 50%; top: 48%; color: var(--blue); transform: translate(-50%, -100%); filter: drop-shadow(0 3px 4px rgba(20,40,80,.3)); }
 .map-pin .icon { width: 30px; height: 30px; stroke-width: 1.6; }
 .map-label { position: absolute; left: 12px; bottom: 12px; background: #fff; border-radius: 7px; padding: 8px 12px; font-size: 12px; font-weight: 500; box-shadow: 0 2px 6px rgba(20,30,50,.14); }
+
+/* ============ Investment showcase ============ */
+.invest-page { max-width: 1180px; margin: 0 auto; padding: 22px 32px 68px; }
+.invest-hero { min-height: 315px; border-radius: 18px; background: linear-gradient(116deg, #6133d1, #8056e9); color: #fff; overflow: hidden; display: grid; grid-template-columns: 1.1fr .9fr; align-items: stretch; }
+.invest-hero > div { padding: 45px 46px; position: relative; z-index: 1; }
+.invest-kicker, .project-label { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; opacity: .82; }
+.invest-hero h1 { font-size: 35px; line-height: 1.08; letter-spacing: -.035em; max-width: 520px; margin: 12px 0 14px; }
+.invest-hero p { max-width: 540px; margin: 0 0 25px; font-size: 14px; line-height: 1.55; opacity: .9; }
+.invest-hero .primary-btn { background: #fff; color: #5c34c8; box-shadow: none; }
+.arrow-turn { transform: rotate(180deg); }
+.invest-hero > img { height: 100%; min-height: 315px; width: 100%; object-fit: cover; mix-blend-mode: luminosity; opacity: .75; }
+.invest-section { margin-top: 46px; }
+.section-heading { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 18px; }
+.section-heading h2, .invest-process h2 { margin: 0; font-size: 25px; letter-spacing: -.025em; }
+.section-heading p { margin: 7px 0 0; font-size: 13px; color: var(--muted); }
+.invest-note { border-radius: 18px; padding: 8px 12px; background: #f4f0ff; color: #7046d7; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.invest-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.project-card { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-sm); background: #fff; }
+.before-after { display: grid; grid-template-columns: 1fr 1fr; height: 205px; position: relative; }
+.before-after:after { content: 'до                 после'; white-space: pre; position: absolute; left: 12px; right: 12px; top: 12px; display: flex; justify-content: space-between; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0,0,0,.4); pointer-events: none; }
+.before-after img { width: 100%; height: 100%; object-fit: cover; }
+.project-body { padding: 18px 19px 19px; }
+.project-label { color: var(--violet); opacity: 1; }
+.project-body h3 { margin: 7px 0 8px; font-size: 19px; }
+.project-body p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; min-height: 39px; }
+.project-stages { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 16px; }
+.project-stages span { padding: 6px 8px; border-radius: 6px; color: #536174; background: var(--surface); font-size: 10px; font-weight: 600; }
+.invest-process { margin-top: 52px; padding: 30px; border-radius: 14px; background: var(--surface); }
+.invest-process > div { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 23px; }
+.invest-process article { position: relative; padding-left: 46px; }
+.invest-process b { position: absolute; left: 0; top: 0; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: #e9dfff; color: #7046d7; font-size: 13px; }
+.invest-process h3 { margin: 3px 0 7px; font-size: 15px; }
+.invest-process p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.5; }
 
 /* ============ Modal / toast ============ */
 .modal-backdrop { position: fixed; inset: 0; background: rgba(12,21,35,.5); z-index: 50; display: grid; place-items: center; padding: 20px; }
@@ -307,6 +343,15 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
   .gallery-row { flex-direction: column; }
   .main-photo { height: 280px; }
   .thumb-col { flex-direction: row; width: auto; height: 74px; }
+  .invest-page { padding: 18px 16px 44px; }
+  .invest-hero { grid-template-columns: 1fr; min-height: 0; }
+  .invest-hero > div { padding: 32px 25px; }
+  .invest-hero h1 { font-size: 29px; }
+  .invest-hero > img { min-height: 180px; max-height: 220px; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .invest-note { white-space: normal; }
+  .invest-grid, .invest-process > div { grid-template-columns: 1fr; }
+  .invest-process { padding: 24px 20px; }
 }
 @media (max-width: 460px) {
   .listing-grid { grid-template-columns: 1fr; }

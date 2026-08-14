@@ -88,8 +88,30 @@ const listings = [
     features: ['ИЖС', 'Подъезд круглый год', 'Электричество рядом', 'Тихий район', 'Собственность'] }
 ];
 
+/* The original mock data was saved through a Windows-1251 editor once.
+   Repair those legacy strings at runtime, while keeping the source portable. */
+function normaliseMojibake(value) {
+  if (typeof value !== 'string' || !/[\u00a0-\u00ff\u0452-\u045f\u2018-\u2026\u2030\u2039\u20ac]/i.test(value)) return value;
+  const special = { 0x0402: 0x80, 0x0403: 0x81, 0x201a: 0x82, 0x0453: 0x83, 0x201e: 0x84, 0x2026: 0x85, 0x2020: 0x86, 0x2021: 0x87, 0x20ac: 0x88, 0x2030: 0x89, 0x0409: 0x8a, 0x2039: 0x8b, 0x040a: 0x8c, 0x040c: 0x8d, 0x040b: 0x8e, 0x040f: 0x8f, 0x0452: 0x90, 0x2018: 0x91, 0x2019: 0x92, 0x201c: 0x93, 0x201d: 0x94, 0x2022: 0x95, 0x2013: 0x96, 0x2014: 0x97, 0x2122: 0x99, 0x0459: 0x9a, 0x203a: 0x9b, 0x045a: 0x9c, 0x045c: 0x9d, 0x045b: 0x9e, 0x045f: 0x9f };
+  special[0x0405] = 0xa5;
+  const bytes = Uint8Array.from([...value], char => {
+    const code = char.codePointAt(0);
+    if (code >= 0x0410 && code <= 0x042f) return code - 0x0410 + 0xc0;
+    if (code >= 0x0430 && code <= 0x044f) return code - 0x0430 + 0xe0;
+    return special[code] ?? (code <= 0xff ? code : 0x3f);
+  });
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { return value; }
+}
+function normaliseDeep(value) {
+  if (typeof value === 'string') return normaliseMojibake(value);
+  if (Array.isArray(value)) return value.map(normaliseDeep);
+  if (value && typeof value === 'object') { Object.keys(value).forEach(key => { value[key] = normaliseDeep(value[key]); }); }
+  return value;
+}
+normaliseDeep(listings);
+
 const PRICE_MIN = 0, PRICE_MAX = 15000000;
-const state = { page: 'home', filter: 'Все', query: '', selected: null, gallery: 0, liked: new Set(), modal: null, priceFrom: PRICE_MIN, priceTo: PRICE_MAX, view: 'map' };
+const state = { page: 'home', filter: 'Все', query: '', selected: null, gallery: 0, liked: new Set(), modal: null, priceFrom: PRICE_MIN, priceTo: PRICE_MAX, view: 'list' };
 const money = value => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
 const app = document.querySelector('#app');
 
@@ -137,6 +159,17 @@ function promoTiles() {
     { key: 'invest', color: 'violet', image: images.promoInvest, title: 'Инвестировать', sub: 'Флиппинг и готовые\nпроекты' }
   ];
   return `<div class="promo-grid">${tiles.map(t => `<button class="promo-tile promo-${t.color}" data-promo="${t.key}" aria-label="${t.title}"><img class="promo-art" src="${t.image}" alt=""/><span class="promo-copy"><span class="promo-title">${t.title}</span><span class="promo-sub">${t.sub.replace('\n', '<br/>')}</span></span></button>`).join('')}</div>`;
+}
+
+function itemPhotos(item) {
+  const sets = {
+    1: images.apartment,
+    2: [images.house, images.home, images.apartment[1], images.apartment[3]],
+    3: [images.office, images.apartment[4], images.renovation, images.home],
+    4: [images.renovation, images.apartment[3], images.apartment[1], images.apartment[4]],
+    5: [images.home, images.house, images.apartment[2], images.renovation]
+  };
+  return sets[item.id] || [item.image];
 }
 
 function card(item) {
@@ -225,6 +258,23 @@ function homePage() {
   </main>`;
 }
 
+function investmentsPage() {
+  return `${header()}<main class="invest-page">
+    <div class="breadcrumbs"><span>Главная</span><span class="crumb-sep">·</span><span>Инвестиции</span></div>
+    <section class="invest-hero">
+      <div><span class="invest-kicker">Инвестиционные объекты</span><h1>Недвижимость с понятным планом обновления</h1><p>Подбор объектов в Снежном для ремонта и последующей реализации. Показываем исходное состояние, объём работ и сценарий проекта — без обещаний доходности.</p><button class="primary-btn" data-action="investContact">Обсудить подбор ${icon('arrowLeft', 'arrow-turn')}</button></div>
+      <img src="${images.renovation}" alt="Объект до ремонта"/>
+    </section>
+    <section class="invest-section"><div class="section-heading"><div><h2>Проекты в работе</h2><p>Примеры демонстрационной витрины для инвестора.</p></div><span class="invest-note">Данные — ориентиры для презентации</span></div>
+      <div class="invest-grid">
+        <article class="project-card"><div class="before-after"><img src="${images.renovation}" alt="Квартира до обновления"/><img src="${images.apartment[0]}" alt="Квартира после обновления"/></div><div class="project-body"><span class="project-label">Квартира · 45 м²</span><h3>мкр. 3-й, 8</h3><p>Обновление отделки, кухни и инженерных узлов. Работа с объектом ведётся после проверки документов.</p><div class="project-stages"><span>01 Осмотр</span><span>02 Смета</span><span>03 Ремонт</span></div></div></article>
+        <article class="project-card"><div class="before-after"><img src="${images.home}" alt="Дом до обновления"/><img src="${images.house}" alt="Дом после обновления"/></div><div class="project-body"><span class="project-label">Дом · 120 м²</span><h3>ул. Лесная, 23</h3><p>Оценка состояния дома и коммуникаций, поэтапное обновление фасада и внутренних помещений.</p><div class="project-stages"><span>01 Анализ</span><span>02 План работ</span><span>03 Реализация</span></div></div></article>
+      </div>
+    </section>
+    <section class="invest-process"><h2>Как устроен процесс</h2><div><article><b>1</b><h3>Находим объект</h3><p>Сверяем локацию, документы и реальное состояние.</p></article><article><b>2</b><h3>Собираем план</h3><p>Фиксируем гипотезы, бюджет работ и риски.</p></article><article><b>3</b><h3>Показываем ход</h3><p>В презентации доступны этапы «до / после».</p></article></div></section>
+  </main>`;
+}
+
 function miniMap(label) {
   return `<div class="map-panel">
     <svg class="map-svg" viewBox="0 0 400 220" preserveAspectRatio="none">
@@ -243,7 +293,7 @@ function miniMap(label) {
 }
 
 function detailPage(item) {
-  const photos = images.apartment;
+  const photos = itemPhotos(item);
   const activeIdx = state.gallery % photos.length;
   const maxThumbs = 3;
   const thumbs = photos.slice(0, maxThumbs);
@@ -291,7 +341,8 @@ function detailPage(item) {
           <div class="location">${icon('pin', 'meta-icon')}${item.location}</div>
           <div class="detail-price">${money(item.price)}<small>${Math.round(item.price / item.area).toLocaleString('ru-RU')} ₽ / ${item.kind === 'Участок' ? 'сотку' : 'м²'}</small></div>
           <div class="detail-actions">
-            <button class="contact-btn" data-action="contact">Написать продавцу</button>
+            <button class="contact-btn" data-action="contact">Записаться на просмотр</button>
+            <button class="message-btn" data-action="contact">${icon('chat')}Написать</button>
             <button class="phone-btn" data-action="phone">${icon('phone')}Показать телефон</button>
           </div>
           <div class="protect">${icon('shield')}Номер защищён от спама и мошенников</div>
@@ -312,16 +363,33 @@ function modal() {
 }
 
 function render() {
-  const view = state.page === 'detail' ? detailPage(state.selected) : homePage();
+  const view = state.page === 'detail' ? detailPage(state.selected) : state.page === 'invest' ? investmentsPage() : homePage();
   app.innerHTML = `<div class="app-shell">${view}</div>${modal()}`;
+  repairVisibleCopy();
   bind();
+}
+
+function repairVisibleCopy() {
+  const root = document.body;
+  document.title = normaliseMojibake(document.title);
+  const description = document.querySelector('meta[name="description"]');
+  if (description) description.content = normaliseMojibake(description.content);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+  textNodes.forEach(node => { node.nodeValue = normaliseMojibake(node.nodeValue); });
+  root.querySelectorAll('[placeholder], [aria-label], [alt]').forEach(el => {
+    ['placeholder', 'aria-label', 'alt'].forEach(attr => {
+      if (el.hasAttribute(attr)) el.setAttribute(attr, normaliseMojibake(el.getAttribute(attr)));
+    });
+  });
 }
 
 function toast(message) { const el = document.querySelector('#toast'); el.textContent = message; el.classList.add('show'); clearTimeout(window.__toast); window.__toast = setTimeout(() => el.classList.remove('show'), 2300); }
 
 function bind() {
   document.querySelectorAll('[data-nav]').forEach(btn => btn.addEventListener('click', () => { state.filter = btn.dataset.nav === 'Купить' ? 'Все' : btn.dataset.nav === 'Снять' ? 'Квартира' : 'Все'; render(); toast(`Раздел «${btn.dataset.nav}» открыт`); }));
-  document.querySelectorAll('[data-open]').forEach(cardEl => cardEl.addEventListener('click', e => { if (e.target.closest('[data-like]')) return; state.selected = listings.find(item => item.id === Number(cardEl.dataset.open)); state.page = 'detail'; state.gallery = 0; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
+  document.querySelectorAll('[data-open]').forEach(cardEl => cardEl.addEventListener('click', e => { if (e.target.closest('[data-like]')) return; openListing(Number(cardEl.dataset.open)); }));
   document.querySelectorAll('[data-like]').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); const id = Number(btn.dataset.like); state.liked.has(id) ? state.liked.delete(id) : state.liked.add(id); render(); toast(state.liked.has(id) ? 'Добавлено в избранное' : 'Удалено из избранного'); }));
   document.querySelectorAll('[data-gallery]').forEach(btn => btn.addEventListener('click', () => { state.gallery = Number(btn.dataset.gallery); render(); }));
   document.querySelectorAll('[data-action]').forEach(btn => btn.addEventListener('click', () => action(btn.dataset.action)));
@@ -371,7 +439,7 @@ function syncSliderVisual() {
 }
 
 function action(name) {
-  if (name === 'home') { state.page = 'home'; state.selected = null; state.modal = null; render(); return; }
+  if (name === 'home') { navigate('home'); return; }
   if (name === 'publish') state.modal = 'publish';
   else if (name === 'contact') state.modal = 'contact';
   else if (name === 'phone') state.modal = 'phone';
@@ -385,6 +453,7 @@ function action(name) {
   else if (name === 'seller') toast('Открываем профиль продавца в полной версии');
   else if (name === 'share') toast('Ссылка на объект скопирована');
   else if (name === 'video' || name === 'planLayout') toast('Медиа появится в следующей версии прототипа');
+  else if (name === 'investContact') state.modal = 'contact';
   else if (name === 'buyMode') { state.filter = 'Все'; }
   else if (name === 'type' || name === 'price' || name === 'rooms' || name === 'area' || name === 'more') toast('Фильтр отмечен для следующего шага прототипа');
   else if (name === 'list' || name === 'map') { state.view = name; toast(name === 'map' ? 'Режим карты выбран' : 'Режим списка выбран'); }
@@ -394,7 +463,35 @@ function action(name) {
 
 document.addEventListener('click', e => {
   const promo = e.target.closest('[data-promo]');
-  if (promo) toast('Раздел находится в разработке демо-версии');
+  if (!promo) return;
+  const key = promo.dataset.promo;
+  if (key === 'invest') navigate('invest');
+  else if (key === 'sell') { state.modal = 'publish'; render(); }
+  else { state.filter = key === 'rent' ? 'Квартира' : 'Все'; navigate('catalog'); }
 });
 
-render();
+function openListing(id) {
+  state.selected = listings.find(item => item.id === id);
+  state.page = 'detail'; state.gallery = 0; state.modal = null;
+  if (location.hash !== `#object-${id}`) location.hash = `object-${id}`;
+  else { render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+
+function navigate(target) {
+  const hash = target === 'home' ? '' : target === 'catalog' ? 'catalog' : target;
+  if (location.hash.replace('#', '') !== hash) location.hash = hash;
+  else applyRoute();
+}
+
+function applyRoute() {
+  const route = location.hash.replace('#', '');
+  const id = Number(route.replace('object-', ''));
+  state.modal = null;
+  if (route.startsWith('object-') && listings.some(item => item.id === id)) { state.page = 'detail'; state.selected = listings.find(item => item.id === id); state.gallery = 0; }
+  else if (route === 'invest') { state.page = 'invest'; state.selected = null; }
+  else { state.page = 'home'; state.selected = null; }
+  render(); window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.addEventListener('hashchange', applyRoute);
+applyRoute();
