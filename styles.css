@@ -346,15 +346,46 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
   .seller-link { font-size: 11px; }
 }
 
-/* Keep the 1280px composition readable on wide laptop/desktop screens. */
-@media (min-width: 1440px) and (max-width: 1599px) {
-  body { zoom: 1.12; width: 89.2857%; }
-}
+/* Fluid desktop sizing: keep the page full-width and scale components, not the body. */
+@media (min-width: 761px) {
+  .topbar {
+    height: clamp(68px, 4vw, 84px);
+    padding-inline: clamp(40px, 3vw, 64px);
+    gap: clamp(34px, 2.4vw, 48px);
+  }
+  .brand-mark .icon { width: clamp(29px, 1.7vw, 36px); height: clamp(29px, 1.7vw, 36px); }
+  .nav { gap: clamp(31px, 2.2vw, 44px); font-size: clamp(13px, .72vw, 15px); }
+  .top-actions { gap: clamp(14px, 1vw, 20px); }
+  .city-pill { font-size: clamp(12px, .68vw, 14px); padding: clamp(8px, .55vw, 11px) clamp(13px, .75vw, 17px); }
+  .primary-btn { padding: clamp(10px, .7vw, 13px) clamp(17px, 1vw, 22px); font-size: clamp(12px, .68vw, 14px); }
 
-@media (min-width: 1600px) and (max-width: 1799px) {
-  body { zoom: 1.25; width: 80%; }
-}
+  .hero { height: clamp(225px, 13.5vw, 280px); }
+  .search-panel { width: clamp(686px, 53.6vw, 1000px); padding: clamp(16px, 1.15vw, 24px) clamp(18px, 1.35vw, 26px) clamp(17px, 1.2vw, 25px); }
+  .search-panel h1 { font-size: clamp(20px, 1.45vw, 28px); margin-bottom: clamp(10px, .8vw, 15px); }
+  .search-row { height: clamp(42px, 2.7vw, 54px); gap: clamp(8px, .6vw, 12px); }
+  .search-input, .select-box { font-size: clamp(12px, .72vw, 15px); }
+  .search-btn { font-size: clamp(13px, .78vw, 16px); padding-inline: clamp(28px, 1.8vw, 38px); }
 
-@media (min-width: 1800px) {
-  body { zoom: 1.4; width: 71.4286%; }
+  .main-content { padding-inline: clamp(48px, 3vw, 64px); }
+  .toolbar { height: clamp(36px, 2.5vw, 44px); gap: clamp(9px, .65vw, 13px); }
+  .filter-chip { height: clamp(36px, 2.5vw, 44px); padding-inline: clamp(13px, .9vw, 18px); font-size: clamp(11px, .65vw, 14px); }
+  .layout { grid-template-columns: clamp(202px, 15vw, 280px) 1fr; gap: clamp(18px, 1.5vw, 30px); }
+
+  .promo-grid { gap: clamp(13px, .8vw, 16px); }
+  .promo-tile { min-height: clamp(91px, 6.2vw, 125px); }
+  .promo-title { font-size: clamp(16px, .95vw, 20px); }
+  .promo-sub { font-size: clamp(10px, .62vw, 13px); }
+
+  .side-title { font-size: clamp(12px, .7vw, 15px); }
+  .check { font-size: clamp(11.5px, .66vw, 14px); }
+  .price-input { font-size: clamp(11.5px, .66vw, 14px); }
+  .results-head h2 { font-size: clamp(16px, .95vw, 20px); }
+  .results-count, .sort-select { font-size: clamp(10.5px, .62vw, 13px); }
+  .listing-grid { gap: clamp(13px, .8vw, 18px); }
+  .card-image-wrap { height: clamp(115px, 8vw, 175px); }
+  .card-body { padding: clamp(9px, .65vw, 14px); }
+  .card-title { font-size: clamp(11.5px, .72vw, 15px); }
+  .card-price { font-size: clamp(16px, 1vw, 21px); }
+  .card-meta { font-size: clamp(10px, .62vw, 13px); }
+  .card-footer { font-size: clamp(9px, .55vw, 12px); }
 }
