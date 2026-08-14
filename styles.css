@@ -89,9 +89,6 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
 .promo-teal:before { background: linear-gradient(90deg, rgba(10,151,138,.96) 0%, rgba(10,151,138,.72) 50%, rgba(10,151,138,.04) 100%); }
 .promo-orange:before { background: linear-gradient(90deg, rgba(240,145,0,.96) 0%, rgba(240,145,0,.72) 50%, rgba(240,145,0,.04) 100%); }
 .promo-violet:before { background: linear-gradient(90deg, rgba(112,69,220,.96) 0%, rgba(112,69,220,.72) 50%, rgba(112,69,220,.04) 100%); }
-.promo-teal:before { background: linear-gradient(90deg, rgba(10,151,138,.96) 0%, rgba(10,151,138,.70) 50%, rgba(10,151,138,.08) 100%); }
-.promo-orange:before { background: linear-gradient(90deg, rgba(240,145,0,.96) 0%, rgba(240,145,0,.70) 50%, rgba(240,145,0,.08) 100%); }
-.promo-violet:before { background: linear-gradient(90deg, rgba(112,69,220,.96) 0%, rgba(112,69,220,.70) 50%, rgba(112,69,220,.08) 100%); }
 .promo-art { position: absolute; inset: 0 0 0 34%; width: 66%; height: 100%; object-fit: cover; display: block; }
 .promo-copy { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; gap: 5px; max-width: 70%; }
 .promo-title { font-size: 16px; font-weight: 700; }
