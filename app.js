@@ -54,10 +54,10 @@ const images = {
   office: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85',
   renovation: 'https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=900&q=85',
   agent: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80'
-  ,promoBuy: 'assets/tile-buy.jpg'
-  ,promoRent: 'assets/tile-rent.jpg'
-  ,promoSell: 'assets/tile-sell.jpg'
-  ,promoInvest: 'assets/tile-invest.jpg'
+  ,promoBuy: 'assets/promo-buy.jpg'
+  ,promoRent: 'assets/promo-rent.jpg'
+  ,promoSell: 'assets/promo-sell.jpg'
+  ,promoInvest: 'assets/promo-invest.jpg'
 };
 
 const featureIcons = {
@@ -136,7 +136,7 @@ function promoTiles() {
     { key: 'sell', color: 'orange', image: images.promoSell, title: 'Продать', sub: 'Разместите объявление\nи найдите покупателя' },
     { key: 'invest', color: 'violet', image: images.promoInvest, title: 'Инвестировать', sub: 'Флиппинг и готовые\nпроекты' }
   ];
-  return `<div class="promo-grid">${tiles.map(t => `<button class="promo-tile promo-${t.color}" data-promo="${t.key}" aria-label="${t.title}"><img class="promo-art" src="${t.image}" alt="${t.title}"/></button>`).join('')}</div>`;
+  return `<div class="promo-grid">${tiles.map(t => `<button class="promo-tile promo-${t.color}" data-promo="${t.key}" aria-label="${t.title}"><img class="promo-art" src="${t.image}" alt=""/><span class="promo-copy"><span class="promo-title">${t.title}</span><span class="promo-sub">${t.sub.replace('\n', '<br/>')}</span></span></button>`).join('')}</div>`;
 }
 
 function card(item) {
