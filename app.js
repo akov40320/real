@@ -43,17 +43,17 @@ function icon(name, cls) { return `<svg class="icon${cls ? ' ' + cls : ''}" view
 /* ===================== Данные ===================== */
 const images = {
   apartment: [
-    'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85',
-    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=700&q=85',
-    'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=700&q=85',
-    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=700&q=85',
-    'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=700&q=85'
+    'assets/apartment-1.jpg',
+    'assets/apartment-2.jpg',
+    'assets/apartment-3.jpg',
+    'assets/apartment-4.jpg',
+    'assets/apartment-5.jpg'
   ],
-  house: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=85',
-  home: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=85',
-  office: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85',
-  renovation: 'https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=900&q=85',
-  agent: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80'
+  house: 'assets/house.jpg',
+  home: 'assets/home.jpg',
+  office: 'assets/office.jpg',
+  renovation: 'assets/renovation.jpg',
+  agent: 'assets/agent.jpg'
   ,promoBuy: 'assets/promo-buy.jpg'
   ,promoRent: 'assets/promo-rent.jpg'
   ,promoSell: 'assets/promo-sell.jpg'
