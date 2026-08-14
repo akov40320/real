@@ -1,5 +1,6 @@
 /* ===================== Иконки (line-icons, наследуют currentColor) ===================== */
 const ICONS = {
+  home: '<path d="M3.5 10.5 12 3l8.5 7.5v9.2a1.3 1.3 0 0 1-1.3 1.3H4.8a1.3 1.3 0 0 1-1.3-1.3v-9.2z"/><path d="M9 21v-6.2h6V21"/>',
   pin: '<path d="M12 21s7-6.4 7-11.8A7 7 0 0 0 5 9.2C5 14.6 12 21 12 21z"/><circle cx="12" cy="9.3" r="2.4"/>',
   heart: '<path d="M12 20.2s-7.6-4.6-10-9.1C.6 7.4 2 3.8 5.7 3.8c2 0 3.4 1.1 4.3 2.6.9-1.5 2.3-2.6 4.3-2.6 3.7 0 5.1 3.6 3.7 7.3-2.4 4.5-10 9.1-10 9.1z"/>',
   heartFill: '<path d="M12 20.2s-7.6-4.6-10-9.1C.6 7.4 2 3.8 5.7 3.8c2 0 3.4 1.1 4.3 2.6.9-1.5 2.3-2.6 4.3-2.6 3.7 0 5.1 3.6 3.7 7.3-2.4 4.5-10 9.1-10 9.1z" fill="currentColor" stroke="none"/>',
@@ -53,6 +54,10 @@ const images = {
   office: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85',
   renovation: 'https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=900&q=85',
   agent: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80'
+  ,promoBuy: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=520&q=85'
+  ,promoRent: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=520&q=85'
+  ,promoSell: 'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=520&q=85'
+  ,promoInvest: 'https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=520&q=85'
 };
 
 const featureIcons = {
@@ -91,7 +96,7 @@ const app = document.querySelector('#app');
 /* ===================== Компоненты ===================== */
 function header() {
   return `<header class="topbar">
-    <button class="brand" data-action="home"><span class="brand-mark">${icon('pin').replace('icon', 'icon brand-icon')}</span><span>Снежное</span></button>
+    <button class="brand" data-action="home" aria-label="На главную"><span class="brand-mark">${icon('home')}</span></button>
     <nav class="nav" aria-label="Основная навигация">
       <button class="${state.filter === 'Все' ? 'is-active' : ''}" data-nav="Купить">Купить</button>
       <button data-nav="Снять">Снять</button>
@@ -102,7 +107,7 @@ function header() {
       <button class="icon-btn" data-action="favorites" aria-label="Избранное">${icon('heart')}${state.liked.size ? `<span class="badge">${state.liked.size}</span>` : ''}</button>
       <button class="icon-btn" data-action="messages" aria-label="Сообщения">${icon('chat')}</button>
       <button class="primary-btn" data-action="publish">${icon('plus')}<span>Разместить объявление</span></button>
-      <button class="icon-btn avatar-btn" data-action="login" aria-label="Войти">${icon('user')}</button>
+      <span class="account-wrap"><button class="icon-btn avatar-btn" data-action="login" aria-label="Войти">${icon('user')}</button>${icon('chevronDown', 'account-chevron')}</span>
     </div>
   </header>`;
 }
@@ -126,12 +131,12 @@ function hero() {
 
 function promoTiles() {
   const tiles = [
-    { key: 'buy', color: 'blue', icon: 'key', title: 'Купить', sub: 'Квартиры и другая недвижимость' },
-    { key: 'rent', color: 'teal', icon: 'armchair', title: 'Снять', sub: 'Аренда квартир и домов' },
-    { key: 'sell', color: 'orange', icon: 'megaphone', title: 'Продать', sub: 'Разместите объявление и найдите покупателя' },
-    { key: 'invest', color: 'violet', icon: 'roller', title: 'Инвестировать', sub: 'Флиппинг и готовые проекты' }
+    { key: 'buy', color: 'blue', image: images.promoBuy, title: 'Купить', sub: 'Квартиры, дома\nи другая недвижимость' },
+    { key: 'rent', color: 'teal', image: images.promoRent, title: 'Снять', sub: 'Аренда квартир\nи домов' },
+    { key: 'sell', color: 'orange', image: images.promoSell, title: 'Продать', sub: 'Разместите объявление\nи найдите покупателя' },
+    { key: 'invest', color: 'violet', image: images.promoInvest, title: 'Инвестировать', sub: 'Флиппинг и готовые\nпроекты' }
   ];
-  return `<div class="promo-grid">${tiles.map(t => `<button class="promo-tile promo-${t.color}" data-promo="${t.key}"><span class="promo-icon">${icon(t.icon)}</span><span class="promo-title">${t.title}</span><span class="promo-sub">${t.sub}</span></button>`).join('')}</div>`;
+  return `<div class="promo-grid">${tiles.map(t => `<button class="promo-tile promo-${t.color}" data-promo="${t.key}"><img class="promo-art" src="${t.image}" alt=""/><span class="promo-copy"><span class="promo-title">${t.title}</span><span class="promo-sub">${t.sub.replace('\n', '<br/>')}</span></span></button>`).join('')}</div>`;
 }
 
 function card(item) {
@@ -206,10 +211,10 @@ function homePage() {
   );
   return `${header()}${hero()}<main class="main-content">
     ${filters()}
-    ${promoTiles()}
     <div class="layout">
       ${sidebar()}
-      <section>
+      <section class="results-column">
+        ${promoTiles()}
         <div class="results-head">
           <h2>Актуальные предложения <span class="results-count">${visible.length ? '· ' + visible.length + ' объявлений' : ''}</span></h2>
           <select class="sort-select"><option>Сначала новые</option><option>Сначала дешевле</option><option>Сначала дороже</option></select>
@@ -240,11 +245,12 @@ function miniMap(label) {
 function detailPage(item) {
   const photos = images.apartment;
   const activeIdx = state.gallery % photos.length;
-  const maxThumbs = 4;
+  const maxThumbs = 3;
   const thumbs = photos.slice(0, maxThumbs);
   const extra = photos.length - maxThumbs;
   return `${header()}<main class="detail-page">
-    <div class="breadcrumbs"><button class="back-link" data-action="home">${icon('arrowLeft')}Назад к списку</button><span class="crumb-sep">·</span><span>Купить</span><span class="crumb-sep">·</span><span>Квартиры</span><span class="crumb-sep">·</span><span>${item.title}</span></div>
+    <div class="breadcrumbs"><span>Главная</span><span class="crumb-sep">·</span><span>Купить</span><span class="crumb-sep">·</span><span>Квартиры</span><span class="crumb-sep">·</span><span>${item.title}</span></div>
+    <button class="back-link" data-action="home">${icon('arrowLeft')}Назад к списку</button>
     <div class="detail-layout">
       <section class="detail-left">
         <div class="gallery-row">
@@ -259,17 +265,25 @@ function detailPage(item) {
           </div>
           <div class="thumb-col">${thumbs.map((photo, i) => `<button class="thumb ${i === activeIdx ? 'active' : ''}" data-gallery="${i}"><img src="${photo}" alt="Фото ${i + 1}"/>${i === maxThumbs - 1 && extra > 0 ? `<span class="thumb-more">+${extra}</span>` : ''}</button>`).join('')}</div>
         </div>
-        <section class="description-panel">
-          <div class="tabs">
-            <button class="tab active" data-tab="description">Описание</button>
-            <button class="tab" data-tab="features">Характеристики</button>
-            <button class="tab" data-tab="map">На карте</button>
+        <div class="detail-lower">
+          <section class="description-panel">
+            <div class="tabs">
+              <button class="tab active" data-tab="description">Описание</button>
+              <button class="tab" data-tab="features">Характеристики</button>
+              <button class="tab" data-tab="map">На карте</button>
+            </div>
+            <div id="detailTabContent">
+              <p class="description">Светлая и уютная 2-комнатная квартира с современным ремонтом в новом доме. Удобная планировка: просторная кухня-гостиная, отдельная спальня, гардеробная. Окна выходят во двор, тихо и зелено. В шаговой доступности магазины, школы, детские сады и остановки общественного транспорта.</p>
+              <div class="feature-row">${item.features.map(f => `<span class="feature">${icon(featureIcons[f] || 'shield')}${f}</span>`).join('')}</div>
+            </div>
+          </section>
+          <div class="seller-panel">
+            <img class="seller-avatar" src="${images.agent}" alt="Риелтор"/>
+            <div class="seller-details"><div class="seller-name">Ирина Петрова</div><div class="seller-sub">Риелтор · ${icon('starFill', 'star-icon')} 4,9 · 27 отзывов</div></div>
+            <div class="seller-since">На сайте с июля 2021</div>
+            <button class="seller-link" data-action="seller">Смотреть все объявления</button>
           </div>
-          <div id="detailTabContent">
-            <p class="description">Светлая и уютная 2-комнатная квартира с современным ремонтом в новом доме. Удобная планировка: просторная кухня-гостиная, отдельная спальня, гардеробная. Окна выходят во двор, тихо и зелено. В шаговой доступности магазины, школы, детские сады и остановки общественного транспорта.</p>
-            <div class="feature-row">${item.features.map(f => `<span class="feature">${icon(featureIcons[f] || 'shield')}${f}</span>`).join('')}</div>
-          </div>
-        </section>
+        </div>
       </section>
       <aside class="detail-right">
         <div class="price-card">
@@ -283,11 +297,6 @@ function detailPage(item) {
           <div class="protect">${icon('shield')}Номер защищён от спама и мошенников</div>
           <div class="facts">${item.facts.map(([ic, value, label]) => `<div class="fact">${icon(ic, 'fact-icon')}<div><strong>${value}</strong><span>${label}</span></div></div>`).join('')}</div>
         </div>
-        <div class="seller-panel">
-          <img class="seller-avatar" src="${images.agent}" alt="Риелтор"/>
-          <div><div class="seller-name">Ирина Петрова</div><div class="seller-sub">Риелтор · ${icon('starFill', 'star-icon')} 4,9 · 27 отзывов</div><div class="seller-since">На сайте с июля 2021</div></div>
-        </div>
-        <button class="seller-link" data-action="seller">Смотреть все объявления продавца</button>
         ${miniMap(item.location)}
       </aside>
     </div>
