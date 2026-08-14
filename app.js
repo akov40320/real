@@ -128,7 +128,7 @@ normaliseDeep(listings);
 
 const PRICE_MIN = 0, PRICE_MAX = 15000000;
 const savedLikes = (() => { try { return JSON.parse(localStorage.getItem('snezhnoe-liked') || '[]'); } catch { return []; } })();
-const state = { page: 'home', deal: 'sale', kind: 'Все', rooms: 'Все', query: '', favoritesOnly: false, selected: null, gallery: 0, liked: new Set(savedLikes), modal: null, mediaMode: 'video', publishStep: 1, priceFrom: PRICE_MIN, priceTo: PRICE_MAX, view: 'list', sort: 'new' };
+const state = { page: 'home', deal: 'sale', kind: 'Все', rooms: 'Все', query: '', favoritesOnly: false, selected: null, gallery: 0, liked: new Set(savedLikes), modal: null, quickFilter: null, mediaMode: 'video', publishStep: 1, priceFrom: PRICE_MIN, priceTo: PRICE_MAX, areaFrom: 0, areaTo: 1000, view: 'list', sort: 'new' };
 const money = value => new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
 const escapeAttr = value => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
 const app = document.querySelector('#app');
@@ -208,14 +208,30 @@ function card(item) {
   </article>`;
 }
 
+function quickFilterMenu(type) {
+  const choice = (label, attr, value, active) => `<button type="button" class="quick-option ${active ? 'is-selected' : ''}" ${attr}="${value}"><span>${label}</span>${active ? '<b>✓</b>' : ''}</button>`;
+  const title = { type: 'Тип недвижимости', deal: 'Тип сделки', price: 'Цена, ₽', rooms: 'Количество комнат', area: 'Площадь, м²' }[type];
+  let content = '';
+  if (type === 'type') content = ['Все', 'Квартира', 'Дом', 'Коммерция', 'Участок'].map(value => choice(value, 'data-quick-kind', value, state.kind === value)).join('');
+  if (type === 'deal') content = [choice('Купить', 'data-quick-deal', 'sale', state.deal === 'sale'), choice('Снять', 'data-quick-deal', 'rent', state.deal === 'rent')].join('');
+  if (type === 'rooms') content = ['Все', 1, 2, 3, 4].map(value => choice(value === 'Все' ? 'Любое количество' : value === 4 ? '4 и больше' : `${value} ${value === 1 ? 'комната' : 'комнаты'}`, 'data-quick-rooms', value, String(state.rooms) === String(value))).join('');
+  if (type === 'price') content = `<div class="quick-range"><label>От<input id="quickPriceFrom" inputmode="numeric" value="${state.priceFrom.toLocaleString('ru-RU')}"/></label><label>До<input id="quickPriceTo" inputmode="numeric" value="${Math.min(state.priceTo, state.deal === 'rent' ? 100000 : PRICE_MAX).toLocaleString('ru-RU')}"/></label></div><div class="quick-actions"><button type="button" class="quick-reset" data-action="resetPrice">Сбросить</button><button type="button" class="quick-apply" data-action="applyQuickPrice">Применить</button></div>`;
+  if (type === 'area') content = `<div class="quick-range"><label>От<input id="quickAreaFrom" inputmode="numeric" value="${state.areaFrom || ''}" placeholder="0"/></label><label>До<input id="quickAreaTo" inputmode="numeric" value="${state.areaTo === 1000 ? '' : state.areaTo}" placeholder="Любая"/></label></div><div class="quick-actions"><button type="button" class="quick-reset" data-action="resetArea">Сбросить</button><button type="button" class="quick-apply" data-action="applyQuickArea">Применить</button></div>`;
+  return `<div class="quick-filter-scrim" data-action="closeQuick"></div><div class="quick-filter-popover quick-${type}" role="dialog" aria-label="${title}"><div class="quick-filter-title">${title}<button type="button" data-action="closeQuick" aria-label="Закрыть">${icon('close')}</button></div>${content}</div>`;
+}
+
 function filters() {
-  const chip = (label, act, active) => `<button class="filter-chip ${active ? 'active' : ''}" data-action="${act}">${label}${icon('chevronDown')}</button>`;
+  const priceMax = state.deal === 'rent' ? 100000 : PRICE_MAX;
+  const shortMoney = value => value >= 1000000 ? `${(value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 })} млн ₽` : `${Math.round(value / 1000)} тыс. ₽`;
+  const priceLabel = state.priceFrom > 0 && state.priceTo < priceMax ? `${shortMoney(state.priceFrom)}–${shortMoney(state.priceTo)}` : state.priceFrom > 0 ? `от ${shortMoney(state.priceFrom)}` : state.priceTo < priceMax ? `до ${shortMoney(state.priceTo)}` : 'Цена';
+  const areaLabel = state.areaFrom > 0 && state.areaTo < 1000 ? `${state.areaFrom}–${state.areaTo} м²` : state.areaFrom > 0 ? `от ${state.areaFrom} м²` : state.areaTo < 1000 ? `до ${state.areaTo} м²` : 'Площадь';
+  const chip = (label, act, active) => `<span class="filter-anchor"><button type="button" class="filter-chip ${active || state.quickFilter === act ? 'active' : ''}" data-action="${act}" aria-expanded="${state.quickFilter === act}">${label}${icon('chevronDown')}</button>${state.quickFilter === act ? quickFilterMenu(act) : ''}</span>`;
   return `<div class="toolbar">
     ${chip(state.kind === 'Все' ? 'Тип недвижимости' : state.kind, 'type', state.kind !== 'Все')}
     ${chip(state.deal === 'sale' ? 'Купить' : 'Снять', 'deal', true)}
-    ${chip('Цена', 'price', false)}
+    ${chip(priceLabel, 'price', priceLabel !== 'Цена')}
     ${chip(state.rooms === 'Все' ? 'Комнаты' : `${state.rooms} комн.`, 'rooms', state.rooms !== 'Все')}
-    ${chip('Площадь', 'area', false)}
+    ${chip(areaLabel, 'area', areaLabel !== 'Площадь')}
     <button class="filter-chip" data-action="more">${icon('sliders')}Ещё фильтры</button>
     <span class="toolbar-spacer"></span>
     <div class="view-toggle">
@@ -262,6 +278,7 @@ function homePage() {
     item.deal === state.deal &&
     (state.kind === 'Все' || item.kind === state.kind) &&
     (state.rooms === 'Все' || item.rooms >= Number(state.rooms)) &&
+    item.area >= state.areaFrom && item.area <= state.areaTo &&
     (!state.favoritesOnly || state.liked.has(item.id)) &&
     item.price >= state.priceFrom && item.price <= priceCeiling &&
     (!q || `${item.title} ${item.location} ${item.kind}`.toLowerCase().includes(q))
@@ -394,7 +411,7 @@ function modal() {
   if (!state.modal) return '';
   const closeBtn = `<button class="modal-close" data-action="close" aria-label="Закрыть">${icon('close')}</button>`;
   if (state.modal === 'contact') { const investment = state.page === 'invest'; return `<div class="modal-backdrop" data-close><div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactTitle">${closeBtn}<span class="modal-kicker">${investment ? 'Инвестиционный проект' : 'Просмотр объекта'}</span><h2 id="contactTitle">${investment ? 'Получить расчёт проекта' : 'Записаться на удобное время'}</h2><p>${investment ? 'Оставьте контакты — подготовим демонстрационную структуру расчёта и рисков.' : 'Оставьте контакты — Ирина уточнит детали и подтвердит просмотр.'}</p><label for="contactName">Имя</label><input id="contactName" autocomplete="name" placeholder="Как к вам обращаться?"/><label for="contactPhone">Телефон</label><input id="contactPhone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__"/><label for="contactMessage">Сообщение</label><textarea id="contactMessage">${investment ? 'Здравствуйте! Хочу получить расчёт инвестиционного проекта.' : 'Здравствуйте! Хочу посмотреть объект.'}</textarea><div class="form-error" id="contactError"></div><div class="modal-actions"><button class="secondary-btn" data-action="close">Отмена</button><button class="primary-btn" data-action="send">Отправить заявку</button></div></div></div>`; }
-  if (state.modal === 'filters') return `<div class="modal-backdrop" data-close><div class="modal filters-modal" role="dialog" aria-modal="true">${closeBtn}<span class="modal-kicker">Каталог</span><h2>Фильтры недвижимости</h2><div class="filter-form"><label>Сделка<select id="modalDeal"><option value="sale" ${state.deal === 'sale' ? 'selected' : ''}>Купить</option><option value="rent" ${state.deal === 'rent' ? 'selected' : ''}>Снять</option></select></label><label>Тип<select id="modalKind"><option>Все</option>${['Квартира','Дом','Коммерция','Участок'].map(k => `<option ${state.kind === k ? 'selected' : ''}>${k}</option>`).join('')}</select></label><label>Комнаты<select id="modalRooms"><option>Все</option>${[1,2,3,4].map(r => `<option value="${r}" ${Number(state.rooms) === r ? 'selected' : ''}>${r === 4 ? '4+' : r}</option>`).join('')}</select></label><label>Цена до<input id="modalPrice" inputmode="numeric" value="${Math.min(state.priceTo, state.deal === 'rent' ? 100000 : PRICE_MAX).toLocaleString('ru-RU')}"/></label></div><div class="modal-actions"><button class="secondary-btn" data-action="reset">Сбросить</button><button class="primary-btn" data-action="applyFilters">Показать объекты</button></div></div></div>`;
+  if (state.modal === 'filters') return `<div class="modal-backdrop" data-close><div class="modal filters-modal" role="dialog" aria-modal="true">${closeBtn}<span class="modal-kicker">Каталог</span><h2>Расширенные фильтры</h2><p>Все основные параметры поиска в одном месте.</p><div class="filter-form"><label>Сделка<select id="modalDeal"><option value="sale" ${state.deal === 'sale' ? 'selected' : ''}>Купить</option><option value="rent" ${state.deal === 'rent' ? 'selected' : ''}>Снять</option></select></label><label>Тип<select id="modalKind"><option>Все</option>${['Квартира','Дом','Коммерция','Участок'].map(k => `<option ${state.kind === k ? 'selected' : ''}>${k}</option>`).join('')}</select></label><label>Комнаты<select id="modalRooms"><option>Все</option>${[1,2,3,4].map(r => `<option value="${r}" ${Number(state.rooms) === r ? 'selected' : ''}>${r === 4 ? '4+' : r}</option>`).join('')}</select></label><label>Цена до<input id="modalPrice" inputmode="numeric" value="${Math.min(state.priceTo, state.deal === 'rent' ? 100000 : PRICE_MAX).toLocaleString('ru-RU')}"/></label><label>Площадь от, м²<input id="modalAreaFrom" inputmode="numeric" value="${state.areaFrom || ''}" placeholder="0"/></label><label>Площадь до, м²<input id="modalAreaTo" inputmode="numeric" value="${state.areaTo === 1000 ? '' : state.areaTo}" placeholder="Любая"/></label></div><div class="modal-actions"><button class="secondary-btn" data-action="reset">Сбросить</button><button class="primary-btn" data-action="applyFilters">Показать объекты</button></div></div></div>`;
   if (state.modal === 'publish') {
     const step = state.publishStep;
     const content = step === 1 ? `<label>Тип сделки</label><div class="choice-grid"><button class="choice-card is-active" data-choice>Продать</button><button class="choice-card" data-choice>Сдать</button></div><label>Тип недвижимости</label><select id="publishKind"><option>Квартира</option><option>Дом</option><option>Участок</option><option>Коммерция</option></select>` : step === 2 ? `<label>Адрес объекта</label><input placeholder="Снежное, улица и номер дома"/><div class="form-two"><label>Цена, ₽<input inputmode="numeric" placeholder="2 850 000"/></label><label>Площадь, м²<input inputmode="numeric" placeholder="56"/></label></div><label>Короткое описание</label><textarea placeholder="Состояние, отопление, коммуникации"></textarea>` : `<label>Фотографии</label><button class="upload-demo" data-action="noop">${icon('photo')}<span>Добавить фотографии<small>В демо будет показан предпросмотр</small></span></button><div class="form-two"><label>Ваше имя<input placeholder="Имя"/></label><label>Телефон<input inputmode="tel" placeholder="+7 (___) ___-__-__"/></label></div>`;
@@ -457,6 +474,9 @@ function bind() {
   if (searchForm) searchForm.addEventListener('submit', e => { e.preventDefault(); state.query = document.querySelector('#searchInput').value; render(); toast(state.query ? `Поиск: ${state.query}` : 'Показываем все объекты'); });
   document.querySelectorAll('[data-kind]').forEach(input => input.addEventListener('change', () => { state.kind = input.dataset.kind; render(); }));
   document.querySelectorAll('[data-rooms]').forEach(input => input.addEventListener('change', () => { state.rooms = input.dataset.rooms; render(); }));
+  document.querySelectorAll('[data-quick-kind]').forEach(btn => btn.addEventListener('click', () => { state.kind = btn.dataset.quickKind; state.quickFilter = null; render(); }));
+  document.querySelectorAll('[data-quick-deal]').forEach(btn => btn.addEventListener('click', () => { setDeal(btn.dataset.quickDeal); state.quickFilter = null; render(); }));
+  document.querySelectorAll('[data-quick-rooms]').forEach(btn => btn.addEventListener('click', () => { state.rooms = btn.dataset.quickRooms; state.quickFilter = null; render(); }));
   const sortSelect = document.querySelector('#sortSelect');
   if (sortSelect) sortSelect.addEventListener('change', () => { state.sort = sortSelect.value; render(); });
   const phoneInput = document.querySelector('#contactPhone');
@@ -506,7 +526,12 @@ function action(name) {
   else if (name === 'sendPublish') state.modal = 'success';
   else if (name === 'publishNext') state.publishStep = Math.min(3, state.publishStep + 1);
   else if (name === 'publishBack') state.publishStep = Math.max(1, state.publishStep - 1);
-  else if (name === 'reset') { state.kind = 'Все'; state.rooms = 'Все'; state.query = ''; state.favoritesOnly = false; state.priceFrom = PRICE_MIN; state.priceTo = state.deal === 'rent' ? 100000 : PRICE_MAX; }
+  else if (name === 'reset') { state.kind = 'Все'; state.rooms = 'Все'; state.query = ''; state.favoritesOnly = false; state.priceFrom = PRICE_MIN; state.priceTo = state.deal === 'rent' ? 100000 : PRICE_MAX; state.areaFrom = 0; state.areaTo = 1000; state.quickFilter = null; }
+  else if (name === 'closeQuick') state.quickFilter = null;
+  else if (name === 'resetPrice') { state.priceFrom = PRICE_MIN; state.priceTo = state.deal === 'rent' ? 100000 : PRICE_MAX; state.quickFilter = null; }
+  else if (name === 'resetArea') { state.areaFrom = 0; state.areaTo = 1000; state.quickFilter = null; }
+  else if (name === 'applyQuickPrice') { const max = state.deal === 'rent' ? 100000 : PRICE_MAX; const parse = (id, fallback) => Math.max(0, Math.min(max, Number((document.querySelector(id)?.value || '').replace(/\D/g, '')) || fallback)); let from = parse('#quickPriceFrom', 0), to = parse('#quickPriceTo', max); if (from > to) [from, to] = [to, from]; state.priceFrom = from; state.priceTo = to; state.quickFilter = null; }
+  else if (name === 'applyQuickArea') { let from = Math.max(0, Number((document.querySelector('#quickAreaFrom')?.value || '').replace(/\D/g, '')) || 0), to = Math.max(1, Number((document.querySelector('#quickAreaTo')?.value || '').replace(/\D/g, '')) || 1000); if (from > to) [from, to] = [to, from]; state.areaFrom = from; state.areaTo = to; state.quickFilter = null; }
   else if (name === 'favorites') { state.favoritesOnly = !state.favoritesOnly; navigate('catalog'); toast(state.favoritesOnly ? `Избранное: ${state.liked.size}` : 'Показаны все объекты'); return; }
   else if (name === 'messages') state.modal = 'messages';
   else if (name === 'login') state.modal = 'profile';
@@ -516,9 +541,10 @@ function action(name) {
   else if (name === 'video' || name === 'planLayout') { state.mediaMode = name === 'video' ? 'video' : 'plan'; state.modal = 'media'; }
   else if (name === 'investContact') state.modal = 'contact';
   else if (name === 'galleryPrev' || name === 'galleryNext') { const photos = itemPhotos(state.selected); state.gallery = (state.gallery + (name === 'galleryNext' ? 1 : photos.length - 1)) % photos.length; }
-  else if (name === 'applyFilters') { const deal = document.querySelector('#modalDeal')?.value || state.deal; setDeal(deal); state.kind = document.querySelector('#modalKind')?.value || 'Все'; state.rooms = document.querySelector('#modalRooms')?.value || 'Все'; state.priceTo = Number((document.querySelector('#modalPrice')?.value || '').replace(/\D/g, '')) || (deal === 'rent' ? 100000 : PRICE_MAX); state.modal = null; }
+  else if (name === 'applyFilters') { const deal = document.querySelector('#modalDeal')?.value || state.deal; const selectedKind = document.querySelector('#modalKind')?.value || 'Все'; const selectedRooms = document.querySelector('#modalRooms')?.value || 'Все'; const selectedPrice = Number((document.querySelector('#modalPrice')?.value || '').replace(/\D/g, '')) || (deal === 'rent' ? 100000 : PRICE_MAX); const selectedAreaFrom = Number((document.querySelector('#modalAreaFrom')?.value || '').replace(/\D/g, '')) || 0; const selectedAreaTo = Number((document.querySelector('#modalAreaTo')?.value || '').replace(/\D/g, '')) || 1000; setDeal(deal); state.kind = selectedKind; state.rooms = selectedRooms; state.priceTo = selectedPrice; state.areaFrom = Math.min(selectedAreaFrom, selectedAreaTo); state.areaTo = Math.max(selectedAreaFrom, selectedAreaTo); state.modal = null; }
   else if (name === 'copyPhone') { navigator.clipboard?.writeText('+7 938 123-45-67'); toast('Телефон скопирован'); }
-  else if (name === 'deal' || name === 'type' || name === 'price' || name === 'rooms' || name === 'area' || name === 'more') state.modal = 'filters';
+  else if (name === 'more') { state.quickFilter = null; state.modal = 'filters'; }
+  else if (name === 'deal' || name === 'type' || name === 'price' || name === 'rooms' || name === 'area') { state.modal = null; state.quickFilter = state.quickFilter === name ? null : name; }
   else if (name === 'list' || name === 'map') { state.view = name; toast(name === 'map' ? 'Режим карты выбран' : 'Режим списка выбран'); }
   else if (name === 'noop') { toast('Фотографии добавлены в демо-режиме'); return; }
   render();
@@ -539,6 +565,8 @@ function setDeal(deal) {
   state.rooms = 'Все';
   state.priceFrom = PRICE_MIN;
   state.priceTo = deal === 'rent' ? 100000 : PRICE_MAX;
+  state.areaFrom = 0;
+  state.areaTo = 1000;
   state.favoritesOnly = false;
 }
 
@@ -559,6 +587,7 @@ function applyRoute() {
   const route = location.hash.replace('#', '');
   const id = Number(route.replace('object-', ''));
   state.modal = null;
+  state.quickFilter = null;
   if (route.startsWith('object-') && listings.some(item => item.id === id)) { state.page = 'detail'; state.selected = listings.find(item => item.id === id); state.gallery = 0; }
   else if (route === 'invest') { state.page = 'invest'; state.selected = null; }
   else { state.page = 'home'; state.selected = null; }
@@ -566,5 +595,5 @@ function applyRoute() {
 }
 
 window.addEventListener('hashchange', applyRoute);
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && state.modal) { state.modal = null; render(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && (state.modal || state.quickFilter)) { state.modal = null; state.quickFilter = null; render(); } });
 applyRoute();
